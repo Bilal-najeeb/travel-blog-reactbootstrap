@@ -20,8 +20,8 @@ const Home = () => {
                 {
                   cardData.map((data, index)=>{
                     return (
-                      <Col lg="4" md="6">
-                        <BlogCard image={data.image} title={data.title} content={data.content}/>
+                      <Col lg="4" md="6" key={index}>
+                        <BlogCard  image={data.image} title={data.title} content={data.content}/>
                       </Col>
                     )
                   })

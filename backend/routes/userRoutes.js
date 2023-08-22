@@ -1,6 +1,9 @@
 import express from 'express';
 const router = express.Router();
 
+import { validationRules, validatonMiddleware } from '../middleware/validationMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
+
 import { 
     registerUser,
     authUser,
@@ -10,11 +13,12 @@ import {
  } from '../controllers/userController.js';
 
 
-router.post('/', registerUser);
+
+router.post('/', validationRules, validatonMiddleware, registerUser);
 router.post('/auth', authUser);
 router.post('/logout', logoutUser);
-router.get('/profile', getUserProfile);
-router.put('/profile', updatetUserProfile);
+router.get('/profile', protect, getUserProfile);
+router.put('/profile', protect, updatetUserProfile);
 
 
 

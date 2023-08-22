@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config();
+import cookieParser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 const port = process.env.PORT || 5000;
@@ -12,14 +14,28 @@ connectDB();
 
 const app = express();
 
+app.use(express.json());
+app.use(cors());
+
+//To access req.body and parse data
+app.use(express.urlencoded({extended: true}));
+
+//To access req.cookies
+app.use(cookieParser());
+
+
+//User Routes
 app.use('/api/users/', userRoutes);
 
-
+//Server Check
 app.get('/', (req, res) => res.send('Server Ready'));
 
 
+//Global Error Middlewares
 app.use(notFound);
 app.use(errorHandler);
+
+
 app.listen(port, ()=> console.log(`Server started at ${port}`));
 
 
