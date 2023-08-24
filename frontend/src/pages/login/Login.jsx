@@ -11,8 +11,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const Login = () => {
 
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [errorMessages, setErrorMessages] = useState({
         email: '',
         password: '',
@@ -24,24 +24,25 @@ const Login = () => {
     const {userInfo} = useSelector((state)=>state.auth);
 
     const validationHandler = () => {
-        const errors = {}
-
-        if(!email.trim()){
-            errors.email = 'Email is required'
+        const errors = {};
+    
+       
+        if (!email.trim()) {
+          errors.email = 'Email is required';
         }
-
-        if(!password.trim()){
-            errors.password = 'Password is required'
+    
+        if (!password.trim()) {
+          errors.password = 'Password is required';
         } else if (password.length < 6) {
-            errors.password = 'Password should be at least 6 characters';
-          }
-
-
+          errors.password = 'Password should be at least 6 characters';
+        }
+    
+    
         setErrorMessages(errors);
-
+    
         // Check if there are any errors
         return Object.values(errors).every((error) => error === '');
-    }
+      };
     
 
     const SubmitHandler = async (e) => {
@@ -53,7 +54,7 @@ const Login = () => {
 
         try {
 
-            const res = await axios.post('http://localhost:8000/api/users/auth', {
+            const res = await axios.post('http://localhost:3000/api/users/auth', {
                 email: email,
                 password: password
             });
@@ -98,13 +99,13 @@ const Login = () => {
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" onChange={(e)=>setEmail(e.target.value)} />
+                <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e)=>setEmail(e.target.value)} />
                 <span className='text-danger'>{errorMessages.email}</span>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" onChange={(e)=>setPassword(e.target.value)} />
+                <Form.Control type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} />
                 <span className='text-danger'>{errorMessages.password} </span>
                 <Form.Text className="text-muted">
                  <Link to="#">Forgot Password?</Link>

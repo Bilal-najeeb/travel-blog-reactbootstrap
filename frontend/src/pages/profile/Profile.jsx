@@ -4,6 +4,7 @@ import './profile.css'
 import { setCredentials } from '../../slices/authSlice'
 import {useDispatch, useSelector} from 'react-redux';
 import {toast} from 'react-toastify'
+import Sidebar from '../../components/sidebar/Sidebar';
 
 const Profile = () => {
 
@@ -23,7 +24,7 @@ const Profile = () => {
         } else {
             try {
 
-                const res = await axios.put('http://localhost:8000/api/users/profile',{
+                const res = await axios.put('http://localhost:3000/api/users/profile',{
                     _id: userInfo._id,
                     name: name,
                     email: email,
@@ -52,6 +53,7 @@ const Profile = () => {
 
   return (
     <>
+        <Sidebar/>
         <Container className='mt-5'>
             <h1 className='mb-5'>My Profile</h1>
 

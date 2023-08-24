@@ -39,7 +39,7 @@ const router = createBrowserRouter(
             </Route>
        
 
-            <Route path='/viewpost' element={<ViewPost/>}></Route>
+            <Route path='/viewpost/:id' element={<ViewPost/>}></Route>
     </Route>
   )
 )

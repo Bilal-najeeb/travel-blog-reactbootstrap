@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 const port = process.env.PORT || 5000;
 
 import userRoutes from './routes/userRoutes.js'
+import blogRoutes from './routes/blogRoutes.js'
 
 connectDB();
 
@@ -26,6 +27,9 @@ app.use(cookieParser());
 
 //User Routes
 app.use('/api/users/', userRoutes);
+
+//Blog Routes
+app.use('/api/blogs/', blogRoutes)
 
 //Server Check
 app.get('/', (req, res) => res.send('Server Ready'));

@@ -57,7 +57,7 @@ const Signup = () => {
 
     if (isValid) {
       try {
-        const res = await axios.post('http://localhost:8000/api/users/', {
+        const res = await axios.post('http://localhost:3000/api/users/', {
           name: name,
           email: email,
           password: password,
