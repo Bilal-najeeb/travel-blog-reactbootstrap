@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import {useSelector} from 'react-redux'
-
+import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
 import {toast} from 'react-toastify'
@@ -53,6 +53,7 @@ const UpdatePost = () => {
     const [files, setFiles] = useState('');
     
     const [errorMessages, setErrorMessages] = useState('');
+    const navigate = useNavigate();
 
     const {id} = useParams();
 
@@ -118,7 +119,8 @@ const UpdatePost = () => {
 
           const data = res.data;
           console.log("response:", data);
-
+          toast.success("updated successfully");
+          navigate("/");
             
         } catch (error) {
             toast.error(error?.response?.data?.message || error.message);

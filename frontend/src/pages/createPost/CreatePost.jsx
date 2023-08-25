@@ -3,6 +3,7 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { useNavigate } from 'react-router-dom'
 
 import axios from 'axios';
 import {toast} from 'react-toastify'
@@ -51,6 +52,8 @@ const CreatePost = () => {
     const [files, setFiles] = useState('');
     
     const [errorMessages, setErrorMessages] = useState('');
+
+    const navigate = useNavigate();
 
 
     const validationHandler = () => {
@@ -103,6 +106,9 @@ const CreatePost = () => {
 
           const data = res.data;
           console.log("response:", data);
+          toast.success("Blog Post Created Successfully");
+          navigate("/");
+          
 
             
         } catch (error) {

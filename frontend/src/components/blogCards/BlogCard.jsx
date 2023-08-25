@@ -19,10 +19,10 @@ const BlogCard = (props) => {
                 <Card>
                         <Card.Img variant="top" src={blogImg} style={{ width: '100%', height: '250px', objectFit: 'cover' }}/>
                         <Card.Body>
-                            <Card.Title>{title}</Card.Title>
+                            <Card.Title>{title.slice(0,30)}..</Card.Title>
                             <Card.Text><b>Posted by </b><span className='text-primary'>{user}</span></Card.Text>
                             <Card.Text>
-                                {content.slice(0,20)}
+                                {content.slice(0,30)}
                             </Card.Text>
                             <Link to={path}>
                               <Button variant='primary'>View Blog</Button>

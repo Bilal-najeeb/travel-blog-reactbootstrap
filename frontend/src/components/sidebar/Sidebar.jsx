@@ -33,7 +33,7 @@ const Sidebar = () => {
           </Link>
           <hr className='text-secondary' style={{height: '10px', width: '150px'}}/>
           <ul className='nav nav-pills flex-column p-0 m-0'>
-            <li className='nav-item' onClick={handleToggle}>
+            <li className='nav-item' onClick={(handleToggle)}>
                 <Link to="" className='nav-link text-white align-items-center d-flex'>
                   <i className='bi bi-person me-2 fs-3'></i>
                   <span className='fs-5'>My Profile</span>

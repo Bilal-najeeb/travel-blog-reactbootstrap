@@ -10,17 +10,10 @@ const sidebarSlice = createSlice({
   initialState,
   reducers: {
     toggle: (state, action) => {
-      // Use a switch statement to handle different action types
   
           state.isActive = action.payload;
 
-    },
-    decrement: (state) => {
-      // Use if-else statements to handle different cases
-      if (state.count > 0) {
-        state.count -= 1;
-      }
-    },
+    }
   },
 });
 
