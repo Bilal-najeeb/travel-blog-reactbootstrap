@@ -49,8 +49,16 @@ const createBlog = asyncHandler( async (req, res) => {
 // @access  Public
 const getBlog = asyncHandler( async (req, res) => {
 
-    const blogs = await Blog.find().populate('author', 'name');
-    res.status(200).json(blogs);
+
+
+    const search = req.query.search || "";
+
+    // Use a conditional query based on whether a search term is provided
+    const blogQuery = search ? { title: { $regex: search, $options: "i" } } : {};
+
+    const findByTitle = await Blog.find(blogQuery).populate('author', 'name');
+
+    res.status(200).json(findByTitle);
  
  }
  )
@@ -61,7 +69,7 @@ const getBlog = asyncHandler( async (req, res) => {
 // @access  Private
 const getUserBlog = asyncHandler( async (req, res) => {
 
-    const blogs = await Blog.find({author: req.user.id});
+    const blogs = await Blog.find({author: req.user.id}).populate('author', 'name');
     
     res.status(200).json(blogs);
  
@@ -109,6 +117,8 @@ const updateBlog = asyncHandler( async (req, res) => {
 // route    DELETE /api/blogs/deleteblog
 // @access  Private
 const deleteBlog = asyncHandler( async (req, res) => {
+
+   
 
    const blog = await Blog.findById(req.params.id);
 

@@ -3,9 +3,15 @@ import { Button, Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 
 const BlogCard = (props) => {
-    const {title, content, user, blogId, blogImg} = props;
+    const {title, content, user, blogId, blogImg, addDelete, myBlogDelete, addUpdate} = props;
 
     const path = `/viewpost/${blogId}`
+    const updatePath = `/updatepost/${blogId}`
+
+    const handleDelete = () => {
+       
+      myBlogDelete(blogId)
+    }
 
   return (
     <>
@@ -16,12 +22,19 @@ const BlogCard = (props) => {
                             <Card.Title>{title}</Card.Title>
                             <Card.Text><b>Posted by </b><span className='text-primary'>{user}</span></Card.Text>
                             <Card.Text>
-                                {content}
+                                {content.slice(0,20)}
                             </Card.Text>
                             <Link to={path}>
                               <Button variant='primary'>View Blog</Button>
                             </Link>
-
+                            {addUpdate ? (
+                                <Link to={updatePath}>
+                                  <Button variant='warning mx-2'>Update Blog</Button>
+                                </Link>
+                              ) : ""}
+                            {addDelete ? (
+                                <Button onClick={handleDelete} variant='danger mt-3'>Delete Blog</Button>
+                              ) : ""}
                         </Card.Body>
                     </Card>
                 

@@ -11,11 +11,13 @@ import axios from 'axios'
 const Home = () => {
 
   const [blogPost, setBlogPost] = useState();
+  const [searchTitle, setSearchTitle] = useState('');
 
   const dispatch = useDispatch();
 
-  const blogsApi = async () => {
-    const res = await axios.get("http://localhost:3000/api/blogs/");
+  const blogsApi = async (e) => {
+    e?.preventDefault();
+    const res = await axios.get(`http://localhost:3000/api/blogs/?search=${searchTitle}`);
     const data = await res.data;
     setBlogPost(data);
     dispatch(setBlogDataToSlice(data));
@@ -33,8 +35,8 @@ const Home = () => {
     <>
 
     <Container className='py-5 d-flex justify-content-center'>
-      <Form className="d-flex col-12 col-md-6">
-        <Form.Control type='search' placeholder='search' aria-label="Search"/>
+      <Form className="d-flex col-12 col-md-6" onSubmit={blogsApi}>
+        <Form.Control type='search' placeholder='search' aria-label="Search" value={searchTitle} onChange={(e)=>setSearchTitle(e.target.value)}/>
         <button type='submit' className="btn btn-outline-success">Search</button>
       </Form>
     </Container>

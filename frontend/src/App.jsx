@@ -8,6 +8,9 @@ import {Outlet} from 'react-router-dom'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Sidebar from './components/sidebar/Sidebar'
+import MyProfile from './pages/myProfile/MyProfile'
+import Dashboard from './pages/dashboard/Dashboard'
 
 
 
@@ -21,9 +24,9 @@ const App = () => {
       
       
         <Navbar/>
-        
+      
         <ToastContainer/>
-
+  
         <Outlet/>
     
         {/* <Footer/> */}

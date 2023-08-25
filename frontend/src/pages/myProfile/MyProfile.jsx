@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Col, Container, Row, Button, Card, Form } from 'react-bootstrap'
-import './profile.css'
 import { setCredentials } from '../../slices/authSlice'
 import {useDispatch, useSelector} from 'react-redux';
 import {toast} from 'react-toastify'
-import Sidebar from '../../components/sidebar/Sidebar';
+import axios from 'axios';
 
-const Profile = () => {
+const MyProfile = () => {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -18,9 +17,10 @@ const Profile = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+    
         
         if(password != confirmPassword) {
-            toast.error("Passwords don't match");
+            toast.error("Passwords Don't Match")
         } else {
             try {
 
@@ -37,7 +37,7 @@ const Profile = () => {
                 
             } catch (error) {
                
-                toast.success(error?.response?.data?.message);
+                toast.error(error?.response?.data?.message);
             }
         }
 
@@ -48,17 +48,16 @@ const Profile = () => {
         
         setName(userInfo.name);
         setEmail(userInfo.email);
-   
-    },[userInfo.setName, userInfo.setEmail]);
+
+    },[userInfo.name, userInfo.email]);
 
   return (
     <>
-        <Sidebar/>
         <Container className='mt-5'>
             <h1 className='mb-5'>My Profile</h1>
 
             <Row>
-                <Col md="4" lg="3">
+                <Col md="4" lg="4">
                 <Card className='d-flex align-items-center justify-content-center h-100 p-5 bg-primary bg-opacity-75 border-0 text-center'>
                 <div className='w-75 ratio ratio-1x1 mx-auto'>
                 <Card.Img variant="top" className='object-fit-cover rounded-circle w-100 h-100' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg" />
@@ -85,7 +84,7 @@ const Profile = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>New Password (optional) </Form.Label>
                         <Form.Control autoComplete="new-password" type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
                     </Form.Group>
 
@@ -113,4 +112,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default MyProfile
