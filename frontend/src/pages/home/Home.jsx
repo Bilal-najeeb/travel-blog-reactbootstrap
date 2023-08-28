@@ -10,7 +10,7 @@ import axios from 'axios'
 
 const Home = () => {
 
-  const [blogPost, setBlogPost] = useState();
+  const [blogPost, setBlogPost] = useState([]);
   const [searchTitle, setSearchTitle] = useState('');
   const [catFilter, setCatFilter] = useState('');
 
@@ -24,6 +24,7 @@ const Home = () => {
     setBlogPost(data);
     dispatch(setBlogDataToSlice(data));
     console.log(data);
+
   }
 
 
@@ -33,17 +34,20 @@ const Home = () => {
 
   },[])
 
-
+  /*Search filter front-end 
   const dataToShow = searchTitle ?
 
-      blogData?.filter((blog)=>blog.title.toLowerCase().includes(searchTitle.toLowerCase())) : 
+      blogPost?.filter((blog)=>blog.title.toLowerCase().includes(searchTitle.toLowerCase()))
+       : 
 
-      blogPost;
-
+      blogPost?.slice()?.reverse();
+*/
     
+   /* category filter frontend */   
   const categoryFilter = catFilter ?
 
-      blogData?.filter((blog)=>blog.category === catFilter) :
+      blogPost?.filter((blog)=>blog.category === catFilter)
+       :
 
       blogPost
 
@@ -72,7 +76,7 @@ const Home = () => {
     <Container>
             <Row className='g-4'>
                 {
-                 dataToShow?.map((data, index)=>{
+                 blogPost?.map((data, index)=>{
                     return (
                       <Col lg="4" md="6" key={index}>
                         <BlogCard user={data.author.name} blogImg={data.blogImg}  title={data.title} content={data.summary} blogId={data._id}/>

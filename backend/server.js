@@ -9,6 +9,7 @@ const port = process.env.PORT || 5000;
 
 import userRoutes from './routes/userRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 
 connectDB();
 
@@ -30,6 +31,9 @@ app.use('/api/users/', userRoutes);
 
 //Blog Routes
 app.use('/api/blogs/', blogRoutes)
+
+//Category Routes
+app.use('/api/categories/', categoryRoutes)
 
 //Server Check
 app.get('/', (req, res) => res.send('Server Ready'));

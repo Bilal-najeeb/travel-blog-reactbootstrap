@@ -60,10 +60,27 @@ const Login = () => {
             });
 
             const data = res.data;
-            console.log('Response:', res.data);
+            console.log('Response:', data.role);
+
             dispatch(setCredentials({...data}));
-            toast.success('Logged in Successfully');
-            navigate('/');
+
+            if (data.role === "admin"){
+
+                console.log("navigating to admin dashboard");
+                toast.success('Logged in Successfully');
+                navigate('/admindashboard');
+
+            } else {
+
+                toast.success('Logged in Successfully');
+                console.log("navigating");
+                navigate('/');
+            }
+
+            
+            
+            
+        
 
         } catch (error) {
             console.log('Error:', error?.response?.data?.message || error.message);
@@ -78,10 +95,11 @@ const Login = () => {
     useEffect(()=>{
         
         if(userInfo){
+            console.log("login triggered")
             navigate('/');
         }
 
-    },[navigate, userInfo])
+    },[])
 
 
 

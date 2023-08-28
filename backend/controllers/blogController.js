@@ -23,6 +23,8 @@ const createBlog = asyncHandler( async (req, res) => {
 
     const author = req.user._id;
 
+
+
     if(!author){
         res.status(400);
         throw new Error("Unauthorized, no token");
@@ -72,6 +74,27 @@ const getUserBlog = asyncHandler( async (req, res) => {
     const blogs = await Blog.find({author: req.user.id}).populate('author', 'name');
     
     res.status(200).json(blogs);
+ 
+ }
+ )
+
+   // @desc    Get single Blog
+// route    GET /api/blogs/:id
+// @access  Private
+const getSingleBlog = asyncHandler( async (req, res) => {
+
+    
+    const blog = await Blog.findById({_id: req.params.id}).populate('author', 'name');
+    
+    
+    if (!blog){
+        res.status(404);
+        throw new Error('Blog not found');
+    }
+
+
+    res.status(200).json(blog);
+
  
  }
  )
@@ -152,4 +175,4 @@ const deleteBlog = asyncHandler( async (req, res) => {
 
 
  
-export { createBlog, getBlog, getUserBlog, updateBlog, deleteBlog }
+export { createBlog, getBlog, getSingleBlog, getUserBlog, updateBlog, deleteBlog }

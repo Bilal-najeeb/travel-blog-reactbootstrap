@@ -20,10 +20,8 @@ import PrivateRoutes from './components/PrivateRoutes.jsx'
 import MyProfile from './pages/myProfile/MyProfile.jsx'
 import MyBlogs from './pages/myBlogs/MyBlogs.jsx'
 import UpdatePost from './pages/updatePost/UpdatePost.jsx'
-
-
-
-
+import AdminDashboard from './adminPages/AdminDashboard/AdminDashboard.jsx'
+import PrivateAdminRoutes from './components/PrivateAdminRoutes.jsx'
 
 
 
@@ -44,6 +42,12 @@ const router = createBrowserRouter(
                 <Route path='/myblogs' element={<MyBlogs/>}></Route>
                 <Route path='/createpost' element={<CreatePost/>}></Route>
                 <Route path='/updatepost/:id' element={<UpdatePost/>}></Route>
+
+                
+            </Route>
+
+            <Route path='' element={<PrivateAdminRoutes/>}>
+              <Route path='/admindashboard' element={<AdminDashboard/>}></Route>
             </Route>
        
 

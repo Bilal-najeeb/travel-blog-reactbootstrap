@@ -8,7 +8,7 @@ const blogSchema = mongoose.Schema({
     title: {type: String, required: true},
     summary: {type: String, required: true},
     content: {type: String, required: true},
-    category: {type: String, required: true},
+    category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     blogImg: {type: String, required: true},
 
 }, {

@@ -38,12 +38,25 @@ const Header = () => {
               {userInfo ? (
                 <>
                   <NavDropdown title={userInfo.name} id='username'>
-                    <LinkContainer to='/dashboard'>
-                      <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to='/createpost'>
-                      <NavDropdown.Item>Create Blog Post</NavDropdown.Item>
-                    </LinkContainer>
+                    {
+                      userInfo.role === "admin" ? (<>
+                        <LinkContainer to='/admindashboard'>
+                          <NavDropdown.Item>Admin Dashboard</NavDropdown.Item>
+                        </LinkContainer>
+                      </>
+                        
+                      ) : (
+                        <>
+                        <LinkContainer to='/dashboard'>
+                          <NavDropdown.Item>User Dashboard</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to='/createpost'>
+                          <NavDropdown.Item>Create Blog Post</NavDropdown.Item>
+                        </LinkContainer>
+                        </>
+                      )
+                    }
+                    
                     <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                   </NavDropdown>
                 </>
