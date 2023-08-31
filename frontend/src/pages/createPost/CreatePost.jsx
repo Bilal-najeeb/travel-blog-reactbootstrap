@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useNavigate } from 'react-router-dom'
-
+import { useEffect } from 'react'
 import axios from 'axios';
 import {toast} from 'react-toastify'
  
@@ -50,6 +50,7 @@ const CreatePost = () => {
     const [summary, setSummary] = useState('');
     const [category, setCategory] = useState('');
     const [files, setFiles] = useState('');
+    const [getCategory, setGetCategory] = useState([]);
     
     const [errorMessages, setErrorMessages] = useState('');
 
@@ -142,6 +143,22 @@ const CreatePost = () => {
 
 
 
+    /* GET Categories from API */
+    const categoryApi = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/categories/readcategory");
+        const data = await res.data;
+        setGetCategory(data);
+        console.log(data);
+      } catch (error) {
+        toast.error(error?.response?.data?.message);
+      }
+    }
+
+    useEffect(()=>{
+      categoryApi();
+    },[])
+
 
   return (
     <>
@@ -180,10 +197,15 @@ const CreatePost = () => {
 
             <Form.Select className="mb-3" aria-label="Default select example" value={category} onChange={(e)=>setCategory(e.target.value)}>
               <option value="">Select a Category</option>
-              <option value="food">Food</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Travel">Travel</option>
-              <option value="Health">Health</option>
+              
+              {getCategory?.map((cat)=>{
+                return (
+                 
+                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                  
+                )
+              })}
+              
             </Form.Select>
             <span className='text-danger'>{errorMessages.category}</span>
             

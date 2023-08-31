@@ -11,7 +11,10 @@ import userRoutes from './routes/userRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
 
+
+
 connectDB();
+
 
 
 const app = express();
@@ -25,6 +28,8 @@ app.use(express.urlencoded({extended: true}));
 //To access req.cookies
 app.use(cookieParser());
 
+
+app.use(express.static('public'));
 
 //User Routes
 app.use('/api/users/', userRoutes);

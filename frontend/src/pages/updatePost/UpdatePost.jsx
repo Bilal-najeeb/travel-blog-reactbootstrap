@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Form, Button, Row, Col } from 'react-bootstrap'
-import {Link} from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import {useSelector} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
@@ -51,27 +49,32 @@ const UpdatePost = () => {
     const [summary, setSummary] = useState('');
     const [category, setCategory] = useState('');
     const [files, setFiles] = useState('');
+
+    const [getCategory, setGetCategory] = useState([]);
     
     const [errorMessages, setErrorMessages] = useState('');
     const navigate = useNavigate();
 
     const {id} = useParams();
 
-    const {blogData} = useSelector((state)=>state.blog);
-    const viewData = blogData.filter((item)=> item._id === id);
 
-    useEffect(()=>{
-        console.log(viewData);
-        console.log(blogData);
-        setTitle(viewData[0].title);
-      
-        setContent(viewData[0].content);
-        setSummary(viewData[0].summary);
-        setCategory(viewData[0].category);
-       
+    
+  /* GET Categories from API */
+  const categoryApi = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/categories/readcategory");
+      const data = await res.data;
+      setGetCategory(data);
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
 
-    },[])
 
+
+
+  
     const validationHandler = () => {
       const errors = {};
   
@@ -105,7 +108,7 @@ const UpdatePost = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         const isValid = validationHandler();        
-        
+        console.log(category);
         if(isValid){
         try {
 
@@ -120,7 +123,7 @@ const UpdatePost = () => {
           const data = res.data;
           console.log("response:", data);
           toast.success("updated successfully");
-          navigate("/");
+          navigate("/dashboard");
             
         } catch (error) {
             toast.error(error?.response?.data?.message || error.message);
@@ -129,6 +132,25 @@ const UpdatePost = () => {
       }
 
 
+    }
+
+
+    const getSingleBlog = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/blogs/singleblog/${id}`)
+        const data = res.data;
+        console.log(data);
+        setTitle(data.title);
+        setContent(data.content);
+        setSummary(data.summary);
+        setCategory(data.category[0].name);
+
+
+      } catch (error) {
+
+        toast.error(error.response.data.message);
+        
+      }
     }
 
 
@@ -151,6 +173,11 @@ const UpdatePost = () => {
       })
     }
 
+    useEffect(()=>{
+      getSingleBlog();
+      categoryApi();
+
+    },[])
 
 
 
@@ -191,10 +218,12 @@ const UpdatePost = () => {
 
             <Form.Select className="mb-3" aria-label="Default select example" value={category} onChange={(e)=>setCategory(e.target.value)}>
               <option value="">Select a Category</option>
-              <option value="food">Food</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Travel">Travel</option>
-              <option value="Health">Health</option>
+  
+              {
+                getCategory.map((cat)=>{return(
+                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                )})
+              }
             </Form.Select>
             <span className='text-danger'>{errorMessages.category}</span>
             

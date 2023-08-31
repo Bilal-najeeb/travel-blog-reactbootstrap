@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 import { Container, Form, Row, Col } from 'react-bootstrap'
 import BlogCard from '../../components/blogCards/BlogCard'
-import cardData from '../../data/cardData'
-import { setBlogDataToSlice } from '../../slices/blogSlice'
-import { useDispatch, useSelector } from 'react-redux'
+
+
+
 
 import axios from 'axios'
 
@@ -13,40 +13,50 @@ const Home = () => {
   const [blogPost, setBlogPost] = useState([]);
   const [searchTitle, setSearchTitle] = useState('');
   const [catFilter, setCatFilter] = useState('');
+  const [getCategory, setGetCategory] = useState([]);
 
-  const dispatch = useDispatch();
-  const {blogData} = useSelector((state)=>state.blog)
+ 
 
   const blogsApi = async (e) => {
     e?.preventDefault();
     const res = await axios.get(`http://localhost:3000/api/blogs/?search=${searchTitle}`);
     const data = await res.data;
     setBlogPost(data);
-    dispatch(setBlogDataToSlice(data));
+
     console.log(data);
 
   }
 
+  /* GET Categories from API */
+  const categoryApi = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/categories/readcategory");
+      const data = await res.data;
+      setGetCategory(data);
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
+
+ 
+
+
 
   useEffect(()=>{
     blogsApi();
-
+    categoryApi();
 
   },[])
 
-  /*Search filter front-end 
-  const dataToShow = searchTitle ?
-
-      blogPost?.filter((blog)=>blog.title.toLowerCase().includes(searchTitle.toLowerCase()))
-       : 
-
-      blogPost?.slice()?.reverse();
-*/
     
    /* category filter frontend */   
   const categoryFilter = catFilter ?
-
-      blogPost?.filter((blog)=>blog.category === catFilter)
+      
+  blogPost.filter((blog) => {
+ 
+    return blog.category[0].name === catFilter;
+  })
        :
 
       blogPost
@@ -62,21 +72,23 @@ const Home = () => {
       </Form>
     </Container>
 
-    {/* <Container className='py-5 d-flex justify-content-center'>
+    <Container className='py-5 d-flex justify-content-center'>
     <Form.Select className="mb-3" aria-label="Default select example" value={catFilter} onChange={(e)=>setCatFilter(e.target.value)}>
               <option value="">Select a Category</option>
-              <option value="food">Food</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Travel">Travel</option>
-              <option value="Health">Health</option>
+              {
+                getCategory.map((cat)=>{return(
+                  <option key={cat._id} value={cat.name}>{cat.name}</option>
+                )})
+              }
+              
             </Form.Select>
-    </Container> */}
+    </Container> 
 
 
     <Container>
             <Row className='g-4'>
                 {
-                 blogPost?.map((data, index)=>{
+                 categoryFilter?.map((data, index)=>{
                     return (
                       <Col lg="4" md="6" key={index}>
                         <BlogCard user={data.author.name} blogImg={data.blogImg}  title={data.title} content={data.summary} blogId={data._id}/>

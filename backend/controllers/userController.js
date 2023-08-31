@@ -105,6 +105,18 @@ const getUserProfile = asyncHandler( async (req, res) => {
 }
 )
 
+// ADMIN ROUTE
+// @desc    Get all users profile
+// route    GET /api/users/profileAll
+// @access  Private
+const getAllUsers = asyncHandler( async (req, res) => {
+
+    const users = await User.find();
+
+    res.status(200).json(users);
+}
+)
+
 // @desc    Update user profile
 // route    PUT /api/users/profile
 // @access  Private
@@ -141,6 +153,111 @@ const updatetUserProfile = asyncHandler( async (req, res) => {
 }
 )
 
+// @desc    Update user profile
+// route    PUT /api/users/profile
+// @access  Private
+const updatetUserProfileImage = asyncHandler( async (req, res) => {
+
+     const user = await User.findById(req.user._id);
+
+     if (user) {
+        user.profile_image = req.file.filename || user.profile_image;
+     } else {
+        res.status(404);
+        throw new Error ("user not found")
+     }
+
+     const updatedUser = await user.save();
+
+     res.status(200).json({
+        profile_image: updatedUser.profile_image,
+     });
+
+}
+)
+
+
+
+
+
+// ADMIN ROUTE
+// @desc    Delete user profile
+// route    DELETE /api/users/profile/delete
+// @access  Private
+const deleteAUser = asyncHandler( async (req, res) => {
+
+    const {userId} = req.body;
+    console.log(userId);
+    const user = await User.findById(userId);
+
+    if(!user){
+        res.status(400);
+        throw new Error('User not found');
+       }
+
+       await user.deleteOne();
+
+
+       res.status(200).json(user._id);
+}
+)
+
+
+
+
+// ADMIN ROUTE
+// @desc    GET user profile
+// route    GET /api/users/profile/single/:id
+// @access  Private
+const getUserFromAdmin = asyncHandler(async (req, res) => {
+
+    const user = await User.findById(req.params.id);
+
+    if(!user){
+        res.status(404);
+        throw new Error ("User not found");
+    }
+
+    res.status(200).json({
+        name: user.name,
+        email: user.email,
+    });
+})
+
+
+
+
+// ADMIN ROUTE
+// @desc    UPDATE user profile
+// route    UPDATE /api/users/profile/updatesingle
+// @access  Private
+const updateSingleAdmin = asyncHandler(async (req, res) => {
+
+
+
+    const user = await User.findById(req.body._id);
+
+    if(user){
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        
+        if(req.body.password){
+            user.password = req.body.password
+        }
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+        })
+
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+})
 
 
 
@@ -151,5 +268,11 @@ export {
     authUser,
     logoutUser,
     getUserProfile,
-    updatetUserProfile
+    updatetUserProfile,
+    updatetUserProfileImage,
+    
+    getAllUsers,
+    getUserFromAdmin,
+    deleteAUser,
+    updateSingleAdmin,
 }

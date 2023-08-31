@@ -1,44 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { Col, Container, Row, Button, Card, Form } from 'react-bootstrap'
-import { setCredentials } from '../../slices/authSlice'
-import {useDispatch, useSelector} from 'react-redux';
-import {toast} from 'react-toastify'
-import axios from 'axios';
-import Emage from '../../images/1693473282755-206423167.jpg'
+import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap'
 
-const MyProfile = () => {
+import React, { useEffect, useState } from 'react'
+
+import { useParams } from 'react-router';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const AdminUpdateUser = () => {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [profileImage, setProfileImage] = useState('');
-    const [receivedImage, setReceivedImage] = useState();
+
+    const {id: userId} = useParams();
 
 
-
-    const {userInfo} = useSelector((state)=>state.auth);
-    const dispatch = useDispatch();
 
     const submitHandler = async (e) => {
         e.preventDefault();
-    
+        console.log(userId);
         
         if(password != confirmPassword) {
             toast.error("Passwords Don't Match")
         } else {
             try {
 
-                const res = await axios.put('http://localhost:3000/api/users/profile',{
-                    _id: userInfo._id,
+                const res = await axios.put('http://localhost:3000/api/users/profile/updatesingle',{
+                    _id: userId,
                     name: name,
                     email: email,
                     password: password,
                 })
 
                 const data = await res.data;
-                dispatch(setCredentials({...data}));
+                console.log("updated data", data);
                 toast.success('Profile Updated!');
+              
                 
             } catch (error) {
                
@@ -46,68 +44,45 @@ const MyProfile = () => {
             }
         }
 
-
     }
+
+
+    const getUserInfo = async () => {
+     
+        try {
+            const res = await axios.get(`http://localhost:3000/api/users/profile/single/${userId}`)
+        const data = await res.data;
+       
+
+        setName(data.name);
+        setEmail(data.email);
+
+       
+
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    }
+
 
     useEffect(()=>{
-        
-        setName(userInfo.name);
-        setEmail(userInfo.email);
-  
-    },[userInfo.name, userInfo.email, receivedImage]);
-
-
-
-    const handleImageUpload = async (e) => {
-          e.preventDefault();
-          console.log(profileImage);
-          try {
-
-            const formData = new FormData();
-              formData.append('_id', userInfo._id);
-
-              if (profileImage) {
-                formData.append('profileImage', profileImage);
-              }
-
-
-
-              const res = await axios.put('http://localhost:3000/api/users/profile/image', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              });
-              const data = await res.data;
-              setReceivedImage(data.profile_image);
-              console.log("image received:", data.profile_image);
-            
-        } catch (error) {
-           
-            toast.error(error?.response?.data?.message);
-        }
-
-    }
-
-
+        getUserInfo();
+    
+    },[])
 
 
   return (
-    <>
-        <Container className='mt-5'>
-            <h1 className='mb-5'>My Profile</h1>
+    <Container className='mt-5'>
+            <h1 className='mb-5'>User Profile</h1>
 
             <Row>
                 <Col md="4" lg="4">
                 <Card className='d-flex align-items-center justify-content-center h-100 p-5 bg-primary bg-opacity-75 border-0 text-center'>
                 <div className='w-75 ratio ratio-1x1 mx-auto'>
-                <Card.Img  src={`http://localhost:3000/frontend/src/images/${receivedImage}`}  variant="top" className='object-fit-cover rounded-circle w-100 h-100'/>
+                <Card.Img variant="top" className='object-fit-cover rounded-circle w-100 h-100' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg" />
                 </div>
                     <Card.Body className='custom-card-body'>
-                        <Form onSubmit={handleImageUpload} encType='multipart/form-data'>
-                          <Form.Control type='file' name='image' onChange={(e)=>setProfileImage(e.target.files[0])}/>
-                          <Button type='submit' placeholder='upload'>Upload Image</Button>
-                        </Form>
-                        <Card.Title className='text-white mt-3'>{name}</Card.Title>
+                        <Card.Title className='text-white '>Name Here</Card.Title>
                     </Card.Body>
                 </Card>
                 </Col>
@@ -137,8 +112,6 @@ const MyProfile = () => {
                         <Form.Control autoComplete="new-password" type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} />
                     </Form.Group>
 
-                    
-
                    
                     <Button variant="primary" type="submit">
                         Update Profile
@@ -154,8 +127,7 @@ const MyProfile = () => {
             </Row>
 
         </Container>
-    </>
   )
 }
 
-export default MyProfile
+export default AdminUpdateUser

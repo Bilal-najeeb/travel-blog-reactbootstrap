@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Blog from '../models/blogModel.js';
 import User from '../models/userModel.js';
-
+import Category from '../models/categoryModel.js';
 
 
 
@@ -23,7 +23,12 @@ const createBlog = asyncHandler( async (req, res) => {
 
     const author = req.user._id;
 
+    const catId = await Category.findById(category);
 
+    if(!catId){
+        res.status(404);
+        throw new Error("Invalid blog category");
+    }
 
     if(!author){
         res.status(400);
@@ -35,7 +40,7 @@ const createBlog = asyncHandler( async (req, res) => {
         title,
         summary,
         content,
-        category,
+        category: catId,
         blogImg,
     })
 
@@ -58,7 +63,7 @@ const getBlog = asyncHandler( async (req, res) => {
     // Use a conditional query based on whether a search term is provided
     const blogQuery = search ? { title: { $regex: search, $options: "i" } } : {};
 
-    const findByTitle = await Blog.find(blogQuery).populate('author', 'name');
+    const findByTitle = await Blog.find(blogQuery).populate('author', 'name').populate('category', 'name');
 
     res.status(200).json(findByTitle);
  
@@ -84,7 +89,9 @@ const getUserBlog = asyncHandler( async (req, res) => {
 const getSingleBlog = asyncHandler( async (req, res) => {
 
     
-    const blog = await Blog.findById({_id: req.params.id}).populate('author', 'name');
+    const blog = await Blog.findById({_id: req.params.id})
+                                    .populate('category', 'name')
+                                    .populate('author', 'name');
     
     
     if (!blog){
@@ -128,7 +135,16 @@ const updateBlog = asyncHandler( async (req, res) => {
     throw new Error('User not authorized')
    }
 
-   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, req.body, {new:true})
+   const catId = await Category.findById(req.body.category);
+
+   const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, {
+    title: req.body.title,
+    content: req.body.content,
+    summary: req.body.summary,
+    category: catId,
+    blogImg: req.body.files,
+
+   }, {new:true})
 
     res.status(200).json(updatedBlog);
  

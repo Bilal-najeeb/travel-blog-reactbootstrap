@@ -5,7 +5,7 @@ import { useParams } from 'react-router'
 import axios from 'axios'
 import {useSelector} from 'react-redux'
 import BlogCard from '../../components/blogCards/BlogCard'
-
+import { useNavigate } from 'react-router'
 
 
 const ViewPost = () => {
@@ -13,6 +13,8 @@ const ViewPost = () => {
     const {id} = useParams();
     const [singleBlogData, setSingleBlogData] = useState('');
     
+    const {userInfo} = useSelector((state)=>state.auth);
+    const navigate = useNavigate();
 
     //const {blogData} = useSelector((state)=>state.blog);
     //const viewData = blogData.filter((item)=> item._id === id);
@@ -48,15 +50,15 @@ const ViewPost = () => {
         <Row className='flex-wrap'>
 
                 {singleBlogData && 
-            <Col lg="8">
+            <Col lg="7">
                 <article>
                     <header className="mb-4">
                             {/* Post Header */}
                             <h1 className="fw-bolder mb-1">{singleBlogData.title}</h1>
                             {/* Post Date */}
-                            <div className="text-muted fst-italic mb-2">Posted on by {singleBlogData.author.name}</div>
+                            <div className="text-muted fst-italic mb-2">Posted on {singleBlogData.createdAt.slice(0,10)} by {singleBlogData.author.name}</div>
                             {/* Post Tags */}
-                            <a className="badge bg-secondary text-decoration-none link-light fs-6" href="#!">{singleBlogData.category}</a>
+                            <a className="badge bg-secondary text-decoration-none link-light fs-6" href="#!">{singleBlogData?.category[0]?.name}</a>
                     </header>
                     {/* Preview image figure */}
                     <Figure className="mb-4"><img className="img-fluid rounded" src={singleBlogData.blogImg} alt="..."  style={{ width: '500px', height: '250px', objectFit: 'cover' }}/></Figure>
@@ -83,6 +85,10 @@ const ViewPost = () => {
                     </Col>
                 )})}
                 */}
+
+                {userInfo?._id == singleBlogData?.author?._id && <Col>
+                        <Button variant='warning' onClick={()=>navigate(`/updatepost/${id}`)}>Edit Blog</Button>
+                    </Col>}
             </Col>
             
         </Row>
