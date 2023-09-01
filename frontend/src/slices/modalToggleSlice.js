@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isVisible: false,
+    isCatVisible: false,
 };
 
 
@@ -12,10 +13,14 @@ const modalToggleSlice = createSlice({
         setToggle: (state) => {
             state.isVisible = !state.isVisible;
             
+        },
+        setCatToggle: (state) => {
+            state.isCatVisible = !state.isCatVisible;
+            
         }
     }
 })
 
-export const {setToggle} = modalToggleSlice.actions;
+export const {setToggle, setCatToggle} = modalToggleSlice.actions;
 
 export default modalToggleSlice .reducer;

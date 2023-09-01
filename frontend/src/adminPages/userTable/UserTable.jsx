@@ -12,21 +12,18 @@ const UserTable = () => {
 
     const [userData, setUserData] = useState([]);
 
-    const [addUserModal, setAddUserModal] = useState(false);
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const {isVisible} = useSelector((state)=>state.modalToggle);
 
-    const handleAddUserModal = () => {
-        setAddUserModal(!addUserModal);
-    }
+ 
 
     const getUserData = async () => {
         try {
             const res = await axios.get("http://localhost:3000/api/users/profile/all");
-            const data = res.data;
+            const data = await res.data;
             setUserData(data);
             console.log(data);
         } catch (error) {
@@ -82,7 +79,7 @@ const UserTable = () => {
 
                     {/* Add New User Modal */}
                     {isVisible && (
-                        <AddUserModal closeAddButton={handleAddUserModal}/>
+                        <AddUserModal/>
                     )}
 
                     <Table bordered striped responsive="sm" className='text-center'>
@@ -92,7 +89,7 @@ const UserTable = () => {
                             {userData.length > 0 &&
                                 Object.keys(userData[0]).map((key) => {
                                 // Exclude specific keys from being displayed as headers
-                                if (key !== '_id' && key !== 'password' && key !== '__v') {
+                                if (key !== '_id' && key !== 'password' && key !== '__v' && key !== 'profile_image') {
                                     return <th key={key}>{key}</th>;
                                 }
                                 return null; // Skip this key
@@ -110,11 +107,11 @@ const UserTable = () => {
                                     <tr  key={item._id}>
 
                                         <td>{index+1}</td>
-                                        <td>{item.role}</td>
                                         <td>{item.name}</td>
                                         <td>{item.email}</td>
                                         <td>{item.createdAt.slice(0,10)}</td>
                                         <td>{item.updatedAt.slice(0,10)}</td>
+                                        <td>{item.role}</td>
                                         <td><Button onClick={()=>navigate(`/adminupdateuser/${item._id}`)} className='bg-warning border-0'>Update</Button></td>
                                         <td><Button  onClick={()=>handleDelete(item._id)} className='bg-danger border-0'>Delete</Button></td>
                                     </tr>

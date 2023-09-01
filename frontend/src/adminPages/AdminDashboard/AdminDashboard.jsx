@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux'
 
 import Sidebar from '../../components/sidebar/Sidebar';
 import UserTable from '../userTable/UserTable';
+import CategoriesTable from '../categoriesTable/CategoriesTable';
 
 
 const AdminDashboard = () => {
@@ -22,6 +23,10 @@ const AdminDashboard = () => {
             
             {isActive == "userData" && <>
               <UserTable/>
+            </>}
+
+            {isActive == "categoriesData" && <>
+              <CategoriesTable/>
             </>}
             
 

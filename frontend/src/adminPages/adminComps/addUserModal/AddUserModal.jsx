@@ -14,9 +14,6 @@ const AddUserModal = () => {
     const dispatch = useDispatch();
 
 
-    const {isVisible} = useSelector((state)=>state.modalToggle);
-    
-
   return (
     <div className='addNewUser text-white'>
                             

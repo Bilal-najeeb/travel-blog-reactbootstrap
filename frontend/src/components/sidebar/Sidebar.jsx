@@ -27,6 +27,10 @@ const Sidebar = (props) => {
     dispatch(toggle("userData"));
   }
 
+  const handleToggle4 = () => {
+    dispatch(toggle("categoriesData"));
+  }
+
   return (
     <>
       <Container fluid  className='bg-dark min-vh-100'>
@@ -42,8 +46,15 @@ const Sidebar = (props) => {
            
             <li className='nav-item' onClick={handleToggle3}>
                 <Link to="" className='nav-link text-white align-items-center d-flex'>
-                  <i className='bi bi-person me-2 fs-3'></i>
-                  <span className='fs-5'>User Data</span>
+                  <i className='bi bi-person me-3 fs-3'></i>
+                  <span className='fs-5'>User</span>
+                </Link>
+            </li>
+
+            <li className='nav-item' onClick={handleToggle4}>
+                <Link to="" className='nav-link text-white align-items-center d-flex'>
+                  <i className="bi bi-bookmarks me-3 fs-3"></i>
+                  <span className='fs-5'>Category</span>
                 </Link>
             </li>
 

@@ -4,7 +4,6 @@ import { setCredentials } from '../../slices/authSlice'
 import {useDispatch, useSelector} from 'react-redux';
 import {toast} from 'react-toastify'
 import axios from 'axios';
-import Emage from '../../images/1693473282755-206423167.jpg'
 
 const MyProfile = () => {
 
@@ -100,7 +99,13 @@ const MyProfile = () => {
                 <Col md="4" lg="4">
                 <Card className='d-flex align-items-center justify-content-center h-100 p-5 bg-primary bg-opacity-75 border-0 text-center'>
                 <div className='w-75 ratio ratio-1x1 mx-auto'>
-                <Card.Img  src={`http://localhost:3000/frontend/src/images/${receivedImage}`}  variant="top" className='object-fit-cover rounded-circle w-100 h-100'/>
+                {receivedImage && (
+                    <Card.Img
+                      src={receivedImage}
+                      variant="top"
+                      className='object-fit-cover rounded-circle w-100 h-100'
+                    />
+                  )}
                 </div>
                     <Card.Body className='custom-card-body'>
                         <Form onSubmit={handleImageUpload} encType='multipart/form-data'>
