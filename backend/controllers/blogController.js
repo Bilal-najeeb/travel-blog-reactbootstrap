@@ -60,7 +60,6 @@ const getBlog = asyncHandler( async (req, res) => {
 
     const search = req.query.search || "";
 
-    // Use a conditional query based on whether a search term is provided
     const blogQuery = search ? { title: { $regex: search, $options: "i" } } : {};
 
     const findByTitle = await Blog.find(blogQuery).populate('author', 'name').populate('category', 'name');

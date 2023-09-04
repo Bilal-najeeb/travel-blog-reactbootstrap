@@ -1,38 +1,29 @@
-import React from 'react'
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-import Navbar from './components/navbar/Navbar'
-import Footer from './components/footer/Footer'
-
-
-import {Outlet} from 'react-router-dom'
-
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import Sidebar from './components/sidebar/Sidebar'
-import MyProfile from './pages/myProfile/MyProfile'
-import Dashboard from './pages/dashboard/Dashboard'
-
-
+import Navbar from './components/navbar/Navbar';
+import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
+  const location = useLocation();
 
 
+  const hideNavbarRoutes = ['/login', '/signup',];
+
+
+  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
     <>
-      
-      
-        <Navbar/>
-      
-        <ToastContainer/>
-  
-        <Outlet/>
-    
-        {/* <Footer/> */}
-        
+      {!shouldHideNavbar && <Navbar />}
+      <ToastContainer />
+      <Outlet />
+      {/* <Footer/> */}
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
