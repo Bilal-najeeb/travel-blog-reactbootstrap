@@ -6,7 +6,7 @@ import path from 'path';
 const storageConfig = (folderName) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const destinationFolder = `frontend/src/images`; // Specify the subfolder
+      const destinationFolder = `uploads/`; // Specify the subfolder
       cb(null, destinationFolder);
     },
     filename: (req, file, cb) => {

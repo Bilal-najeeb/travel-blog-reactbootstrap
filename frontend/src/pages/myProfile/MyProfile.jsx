@@ -5,6 +5,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {toast} from 'react-toastify'
 import axios from 'axios';
 
+const baseUrl = import.meta.env.VITE_PROFILE_IMAGE_PATH;
+console.log(baseUrl);
+
 const MyProfile = () => {
 
     const [name, setName] = useState('');
@@ -52,8 +55,8 @@ const MyProfile = () => {
         
         setName(userInfo.name);
         setEmail(userInfo.email);
-  
-    },[userInfo.name, userInfo.email, receivedImage]);
+        setReceivedImage(`${baseUrl}${userInfo.image}`)
+    },[userInfo.name, userInfo.email]);
 
 
 
@@ -77,8 +80,9 @@ const MyProfile = () => {
                 },
               });
               const data = await res.data;
-              setReceivedImage(data.profile_image);
-              console.log("image received:", data.profile_image);
+              setReceivedImage(`${baseUrl}${data.profile_image}`);
+              console.log("image received:", receivedImage);
+              
             
         } catch (error) {
            

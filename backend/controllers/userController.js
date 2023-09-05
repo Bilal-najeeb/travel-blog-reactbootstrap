@@ -62,6 +62,7 @@ const authUser = asyncHandler( async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
+            image: user.profile_image,
             
         })
     } else {
@@ -153,7 +154,7 @@ const updatetUserProfile = asyncHandler( async (req, res) => {
 }
 )
 
-// @desc    Update user profile
+// @desc    Update user profile image
 // route    PUT /api/users/profile
 // @access  Private
 const updatetUserProfileImage = asyncHandler( async (req, res) => {

@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux'
 import Sidebar from '../../components/sidebar/Sidebar';
 import UserTable from '../userTable/UserTable';
 import CategoriesTable from '../categoriesTable/CategoriesTable';
+import AdminNav from '../adminComps/adminNav/AdminNav';
 
 
 const AdminDashboard = () => {
@@ -16,18 +17,22 @@ const AdminDashboard = () => {
   return (
     <>
       
-      <div className='d-flex justift-content-between' >
+      <div className='d-flex gap-2 bg-light' >
             <div  className='col-auto'>
                     <Sidebar isAdmin="true"/>
             </div>
-            
-            {isActive == "userData" && <>
-              <UserTable/>
-            </>}
 
-            {isActive == "categoriesData" && <>
-              <CategoriesTable/>
-            </>}
+            <div className='d-flex flex-column px-4' style={{flex: 1}}>
+                <AdminNav/>
+                
+                {isActive == "userData" && <>
+                  <UserTable/>
+                </>}
+
+                {isActive == "categoriesData" && <>
+                  <CategoriesTable/>
+                </>}
+            </div>
             
 
             
