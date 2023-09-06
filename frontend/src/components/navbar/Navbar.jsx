@@ -1,5 +1,5 @@
 import React from 'react';
-import { Nav, Container, Navbar, NavDropdown } from 'react-bootstrap';
+import { Nav, Container, Navbar, NavDropdown, Image } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import {Link} from 'react-router-dom'
 import './navbar.css';
@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeCredentials } from '../../slices/authSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+const baseUrl = import.meta.env.VITE_PROFILE_IMAGE_PATH;
+
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -26,7 +29,7 @@ const Header = () => {
 
   return (
     <>
-      <Navbar bg='light' expand='sm' collapseOnSelect>
+      <Navbar bg='light' style={{minHeight: '9vh'}} expand='sm' collapseOnSelect>
         <Container>
           <Link to='/' className='navbar-brand'>
             Travel Blog
@@ -59,6 +62,8 @@ const Header = () => {
                     
                     <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
                   </NavDropdown>
+                <Image src={userInfo.image ? `${baseUrl}${userInfo.image}` : 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000'} style={{width: 40, height: 40, objectFit: 'cover', borderRadius: 100}}/>
+
                 </>
               ) : (
                 <>

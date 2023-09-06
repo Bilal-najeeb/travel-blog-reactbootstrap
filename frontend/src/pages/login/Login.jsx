@@ -74,7 +74,7 @@ const Login = () => {
 
                 toast.success('Logged in Successfully');
                 console.log("navigating");
-                navigate('/');
+                navigate('/dashboard');
             }
 
             

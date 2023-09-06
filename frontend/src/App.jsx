@@ -11,7 +11,7 @@ const App = () => {
   const location = useLocation();
 
 
-  const hideNavbarRoutes = ['/login', '/signup', '/admindashboard'];
+  const hideNavbarRoutes = ['/login', '/signup', '/admindashboard', '/dashboard'];
 
 
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);

@@ -1,7 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
 import User from '../models/userModel.js';
-
+import fs from 'fs';
+import path from 'path';
 
 
 
@@ -53,6 +54,10 @@ const authUser = asyncHandler( async (req, res) => {
     
     const user = await User.findOne({email: email});
 
+    if(user.isDeleted == true){
+        res.status(400);
+        throw new Error("This account has been deleted");
+    }
 
     if(user && ( await user.matchPassword(password) ) ){
 
@@ -63,6 +68,7 @@ const authUser = asyncHandler( async (req, res) => {
             email: user.email,
             role: user.role,
             image: user.profile_image,
+            isDeleted: user.isDeleted,
             
         })
     } else {
@@ -162,17 +168,23 @@ const updatetUserProfileImage = asyncHandler( async (req, res) => {
      const user = await User.findById(req.user._id);
 
      if (user) {
+
+   
+
         user.profile_image = req.file.filename || user.profile_image;
+
+        const updatedUser = await user.save();
+        
+        res.status(200).json({
+            profile_image: updatedUser.profile_image,
+         })
+
      } else {
         res.status(404);
         throw new Error ("user not found")
      }
 
-     const updatedUser = await user.save();
-
-     res.status(200).json({
-        profile_image: updatedUser.profile_image,
-     });
+     ;
 
 }
 )
@@ -187,9 +199,9 @@ const updatetUserProfileImage = asyncHandler( async (req, res) => {
 // @access  Private
 const deleteAUser = asyncHandler( async (req, res) => {
 
-    const {userId} = req.body;
-    console.log(userId);
-    const user = await User.findById(userId);
+    const id = req.params.id;
+    //console.log(userId);
+    const user = await User.findById(id);
 
     if(!user){
         res.status(400);
@@ -200,6 +212,36 @@ const deleteAUser = asyncHandler( async (req, res) => {
 
 
        res.status(200).json(user._id);
+}
+)
+
+
+// ADMIN ROUTE
+// @desc    Soft Delete user profile
+// route    PUT /api/users/profile/soft-delete
+// @access  Private
+const softDeleteAUser = asyncHandler( async (req, res) => {
+
+    const id = req.params.id;
+    
+    const user = await User.findById(id);
+
+    if (!user){
+        res.status(400)
+        throw new Error("User not found");
+    }
+
+    if(user.isDeleted == true){
+        res.status(400)
+        throw new Error("User already deleted");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, {
+        isDeleted: true,
+    });
+
+
+       res.status(200).json(updatedUser._id);
 }
 )
 
@@ -222,6 +264,7 @@ const getUserFromAdmin = asyncHandler(async (req, res) => {
     res.status(200).json({
         name: user.name,
         email: user.email,
+        image: user.profile_image,
     });
 })
 
@@ -252,6 +295,7 @@ const updateSingleAdmin = asyncHandler(async (req, res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
+       
         })
 
     } else {
@@ -275,5 +319,6 @@ export {
     getAllUsers,
     getUserFromAdmin,
     deleteAUser,
+    softDeleteAUser,
     updateSingleAdmin,
 }

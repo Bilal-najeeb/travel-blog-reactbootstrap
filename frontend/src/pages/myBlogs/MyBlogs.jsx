@@ -4,6 +4,7 @@ import { Col, Container, Row, Button, Card, Form } from 'react-bootstrap'
 import BlogCard from '../../components/blogCards/BlogCard'
 import { toast } from 'react-toastify'
 
+
 const MyBlogs = () => {
 
   const [apiData, setApiData] = useState([]);
@@ -44,7 +45,7 @@ const MyBlogs = () => {
 
   return (
     <>
-    <Container className='mt-5'>
+    <Container className='mt-2'>
         <h1 className='mb-5'>My Blogs</h1>
 
         <Row className='g-4'>

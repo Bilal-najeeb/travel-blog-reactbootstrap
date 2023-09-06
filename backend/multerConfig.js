@@ -1,4 +1,3 @@
-// multerConfig.js
 import multer from 'multer';
 import path from 'path';
 
@@ -6,7 +5,18 @@ import path from 'path';
 const storageConfig = (folderName) => {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const destinationFolder = `uploads/`; // Specify the subfolder
+      let destinationFolder = '';
+
+      if (folderName === 'user') {
+        destinationFolder = 'uploads/user/';
+      } else if (folderName === 'blog') {
+        destinationFolder = 'uploads/blog/';
+      } else {
+        // Handle the case if folderName is not recognized
+        cb(new Error('Invalid folder name'));
+        return;
+      }
+
       cb(null, destinationFolder);
     },
     filename: (req, file, cb) => {

@@ -58,13 +58,8 @@ const UserTable = () => {
 
         console.log(id);
         try {
-            const res = await axios.delete("http://localhost:3000/api/users/profile/delete",
-            {
-                data: {
-                    userId: id,
-                }
-            });
-            toast.success("Deleted Successfully");
+            const res = await axios.put(`http://localhost:3000/api/users/profile/soft-delete/${id}`);
+            toast.success("Soft Deleted Successfully");
             console.log(res);
             
         } catch (error) {
@@ -89,9 +84,10 @@ const UserTable = () => {
 
     const columns =  [
         {field: "id", headerName: "Id", width: 100},
-        {field: "name", headerName: "Name", width: 250},
-        {field: "role", headerName: "Role", width: 250},
-        {field: "email", headerName: "Email", width: 250},
+        {field: "name", headerName: "Name", width: 200},
+        {field: "role", headerName: "Role", width: 200},
+        {field: "email", headerName: "Email", width: 200},
+        {field: "isDeleted", headerName: "isDeleted", width: 200},
         {
             field: "edit",
             headerName: "Edit",
@@ -134,6 +130,7 @@ const UserTable = () => {
         name: row.name,
         role: row.role,
         email: row.email,
+        isDeleted: row.isDeleted,
         // Store the user ID in a closure
         userId: row._id,
 

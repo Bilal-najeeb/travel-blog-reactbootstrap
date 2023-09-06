@@ -13,9 +13,11 @@ import Category from '../models/categoryModel.js';
 // @access  Private
 const createBlog = asyncHandler( async (req, res) => {
 
-    const {title, summary,content, blogImg, category} = req.body;
-    console.log(title, summary, content, blogImg, category);
-    if(!title || !summary || !content || !blogImg || !category) {
+    const {title, summary,content, category} = req.body;
+    const blog_image = req.file.filename;
+
+    console.log(title, summary, content, blog_image, category);
+    if(!title || !summary || !content || !blog_image || !category) {
         
         res.status(400);
         throw new Error("Fill all fields to create a blog post")
@@ -41,10 +43,10 @@ const createBlog = asyncHandler( async (req, res) => {
         summary,
         content,
         category: catId,
-        blogImg,
+        blogImg: blog_image,
     })
 
-    res.status(200).json(blog);
+    res.status(201).json(blog);
  
  }
  )

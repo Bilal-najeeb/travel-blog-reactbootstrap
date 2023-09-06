@@ -46,15 +46,22 @@ const Sidebar = (props) => {
            
             <li className='nav-item' style={{width: 'inherit'}}  onClick={handleToggle3}>
                 <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
-                  <i className='bi bi-person me-3 fs-4'></i>
-                  <span className='fs-5'>User</span>
+                  <i className='bi bi-person me-3 fs-5'></i>
+                  <span className='fs-6'>User</span>
                 </Link>
             </li>
 
             <li className='nav-item' onClick={handleToggle4}>
                 <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
-                  <i className="bi bi-bookmarks me-3 fs-4"></i>
-                  <span className='fs-5'>Category</span>
+                  <i className="bi bi-bookmarks me-3 fs-5"></i>
+                  <span className='fs-6'>Category</span>
+                </Link>
+            </li>
+
+            <li className='nav-item' onClick={handleToggle1}>
+                <Link to="/" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
+                  <i className='bi bi-house me-3 fs-6'></i>
+                  <span className='fs-6'>Home</span>
                 </Link>
             </li>
 
@@ -62,15 +69,20 @@ const Sidebar = (props) => {
             <>
             <li className='nav-item' onClick={(handleToggle)}>
                 <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
-                  <i className='bi bi-person me-2 fs-4'></i>
-                  <span className='fs-5'>My Profile</span>
+                  <i className='bi bi-person me-3 fs-5'></i>
+                  <span className='fs-6'>User Profile</span>
                 </Link>
             </li>
-            <hr className='text-secondary' style={{height: '10px', width: '150px'}}/>
             <li className='nav-item' onClick={handleToggle1}>
                 <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
-                  <i className='bi bi-postcard me-2 fs-4'></i>
-                  <span className='fs-5'>My Blogs</span>
+                  <i className='bi bi-postcard me-3 fs-5'></i>
+                  <span className='fs-6'>Blogs</span>
+                </Link>
+            </li>
+            <li className='nav-item' onClick={handleToggle1}>
+                <Link to="/" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
+                  <i className='bi bi-house me-3 fs-6'></i>
+                  <span className='fs-6'>Home</span>
                 </Link>
             </li>
             </>

@@ -96,7 +96,7 @@ const MyProfile = () => {
 
   return (
     <>
-        <Container className='mt-5'>
+        <Container className='mt-2'>
             <h1 className='mb-5'>My Profile</h1>
 
             <Row>
@@ -114,9 +114,9 @@ const MyProfile = () => {
                     <Card.Body className='custom-card-body'>
                         <Form onSubmit={handleImageUpload} encType='multipart/form-data'>
                           <Form.Control type='file' name='image' onChange={(e)=>setProfileImage(e.target.files[0])}/>
-                          <Button type='submit' placeholder='upload'>Upload Image</Button>
+                          <Button className='mt-4' type='submit' placeholder='upload'>Upload Image</Button>
                         </Form>
-                        <Card.Title className='text-white mt-3'>{name}</Card.Title>
+                        
                     </Card.Body>
                 </Card>
                 </Col>

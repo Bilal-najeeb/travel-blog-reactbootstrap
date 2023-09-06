@@ -6,11 +6,15 @@ import { useParams } from 'react-router';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const baseUrl = import.meta.env.VITE_PROFILE_IMAGE_PATH;
+
+
 const AdminUpdateUser = () => {
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [profileImage, setProfileImage] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const {id: userId} = useParams();
@@ -56,6 +60,7 @@ const AdminUpdateUser = () => {
 
         setName(data.name);
         setEmail(data.email);
+        setProfileImage(data.image);
 
        
 
@@ -79,10 +84,10 @@ const AdminUpdateUser = () => {
                 <Col md="4" lg="4">
                 <Card className='d-flex align-items-center justify-content-center h-100 p-5 bg-primary bg-opacity-75 border-0 text-center'>
                 <div className='w-75 ratio ratio-1x1 mx-auto'>
-                <Card.Img variant="top" className='object-fit-cover rounded-circle w-100 h-100' src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg" />
+                <Card.Img variant="top" className='object-fit-cover rounded-circle w-100 h-100' src={profileImage ? `${baseUrl}${profileImage}` : 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000' } />
                 </div>
                     <Card.Body className='custom-card-body'>
-                        <Card.Title className='text-white '>Name Here</Card.Title>
+                        <Card.Title className='text-white '>{name}</Card.Title>
                     </Card.Body>
                 </Card>
                 </Col>

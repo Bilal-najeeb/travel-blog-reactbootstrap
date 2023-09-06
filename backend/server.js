@@ -12,7 +12,6 @@ import blogRoutes from './routes/blogRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
 
 
-
 connectDB();
 
 

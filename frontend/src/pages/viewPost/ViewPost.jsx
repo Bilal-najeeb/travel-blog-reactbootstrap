@@ -7,6 +7,8 @@ import {useSelector} from 'react-redux'
 import BlogCard from '../../components/blogCards/BlogCard'
 import { useNavigate } from 'react-router'
 
+const baseBlogImageUrl = import.meta.env.VITE_BLOG_IMAGE_PATH;
+
 
 const ViewPost = () => {
 
@@ -61,7 +63,7 @@ const ViewPost = () => {
                             <a className="badge bg-secondary text-decoration-none link-light fs-6" href="#!">{singleBlogData?.category[0]?.name}</a>
                     </header>
                     {/* Preview image figure */}
-                    <Figure className="mb-4"><img className="img-fluid rounded" src={singleBlogData.blogImg} alt="..."  style={{ width: '500px', height: '250px', objectFit: 'cover' }}/></Figure>
+                    <Figure className="mb-4"><img className="img-fluid rounded" src={singleBlogData.blogImg ? `${baseBlogImageUrl}${singleBlogData.blogImg}` : 'https://thumbs.dreamstime.com/b/no-thumbnail-image-148010362.jpg'} alt="..."  style={{ width: '500px', height: '250px', objectFit: 'cover' }}/></Figure>
                     {/* Post content */}
                     <div dangerouslySetInnerHTML={{__html:singleBlogData.content}}/>
                 </article>

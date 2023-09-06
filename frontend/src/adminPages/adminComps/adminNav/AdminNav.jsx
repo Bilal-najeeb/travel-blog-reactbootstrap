@@ -9,6 +9,8 @@ import { removeCredentials } from '../../../slices/authSlice';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const baseUrl = import.meta.env.VITE_PROFILE_IMAGE_PATH;
+
 const AdminNav = () => {
 
     const { userInfo } = useSelector((state) => state.auth);
@@ -59,7 +61,7 @@ const AdminNav = () => {
                 
                 <NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
               </NavDropdown>
-            <Image src='https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000' style={{width: 40, height: 40, objectFit: 'cover', borderRadius: 100}}/>
+            <Image src={userInfo.image ? `${baseUrl}${userInfo.image}` : 'https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000'} style={{width: 40, height: 40, objectFit: 'cover', borderRadius: 100}}/>
 
             </div>
           ) : (
