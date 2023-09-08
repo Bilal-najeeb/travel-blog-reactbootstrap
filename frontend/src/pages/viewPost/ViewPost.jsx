@@ -14,13 +14,14 @@ const ViewPost = () => {
 
     const {id} = useParams();
     const [singleBlogData, setSingleBlogData] = useState('');
+    const [otherBlogs, setOtherBlogs] = useState([]);
     
     const {userInfo} = useSelector((state)=>state.auth);
     const navigate = useNavigate();
 
     //const {blogData} = useSelector((state)=>state.blog);
     //const viewData = blogData.filter((item)=> item._id === id);
-    //const viewOtherBlogs = blogData.filter((item)=> item._id !== id && item.category === "Entertainment");
+    
     
 
     const singleBlogApi = async () => {
@@ -36,20 +37,35 @@ const ViewPost = () => {
                 }
     }
 
+    const blogsApi = async (e) => {
+        e?.preventDefault();
+    
+        const res = await axios.get(`http://localhost:3000/api/blogs/`);
+        const data = await res.data;
+        setOtherBlogs(data.blogs);
+        console.log(data);
+      }
+
+    
+
 
 
     useEffect(()=>{
         singleBlogApi();
+        blogsApi();
         //console.log("data:", blogData);
         //console.log(id);
         //console.log(viewData);
 
-    },[])
+    },[id])
+
+
+    const viewOtherBlogs = otherBlogs.filter((item)=> item._id !== id && item.category[0]?.name === singleBlogData?.category[0]?.name);
 
 
   return (
     <Container className='py-5'>
-        <Row className='flex-wrap'>
+        <Row className='flex-wrap justify-content-between'>
 
                 {singleBlogData && 
             <Col lg="7">
@@ -69,7 +85,7 @@ const ViewPost = () => {
                 </article>
             </Col>}
 
-            <Col lg="4">
+            <Col lg="3">
                <Card className='mb-4'>
                <Card.Header>Search Blogs</Card.Header>
                <Card.Body>
@@ -81,12 +97,12 @@ const ViewPost = () => {
 
                </Card>
 
-                {/* {viewOtherBlogs?.map((data,index)=>{return(
+                 {viewOtherBlogs?.map((data,index)=>{return(
                     <Col key={index} className='mb-3'>
                     <BlogCard user={data.author.name} blogImg={data.blogImg}  title={data.title} content={data.summary} blogId={data._id}/>
                     </Col>
                 )})}
-                */}
+               
 
                 {userInfo?._id == singleBlogData?.author?._id && <Col>
                         <Button variant='warning' onClick={()=>navigate(`/updatepost/${id}`)}>Edit Blog</Button>

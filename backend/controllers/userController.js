@@ -54,7 +54,7 @@ const authUser = asyncHandler( async (req, res) => {
     
     const user = await User.findOne({email: email});
 
-    if(user.isDeleted == true){
+    if(user?.isDeleted == true){
         res.status(400);
         throw new Error("This account has been deleted");
     }

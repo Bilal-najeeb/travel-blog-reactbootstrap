@@ -58,15 +58,39 @@ const createBlog = asyncHandler( async (req, res) => {
 // @access  Public
 const getBlog = asyncHandler( async (req, res) => {
 
-
-
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
+    const category = req.query.category || "";
+  
 
-    const blogQuery = search ? { title: { $regex: search, $options: "i" } } : {};
+    // Calculate the skip value based on the page and limit
+    const skip = (page - 1) * limit;
 
-    const findByTitle = await Blog.find(blogQuery).populate('author', 'name').populate('category', 'name');
+    const baseQuery = {};
 
-    res.status(200).json(findByTitle);
+    if(search){
+        baseQuery.title = { $regex: search, $options: "i" }
+    }
+
+    if(category){
+        baseQuery.category = category;
+    }
+    
+    // Find all blogs that match the search query, skip and limit the results
+    const totalBlogs = await Blog.countDocuments(baseQuery);
+    const blogs = await Blog.find(baseQuery)
+        .populate('author', 'name')
+        .populate('category', 'name')
+        .skip(skip)
+        .limit(limit);
+
+    res.status(200).json({
+            blogs,
+            total: totalBlogs,
+            //currentPage: page,
+            //totalPages: Math.ceil(totalBlogs / limit),
+          });
  
  }
  )

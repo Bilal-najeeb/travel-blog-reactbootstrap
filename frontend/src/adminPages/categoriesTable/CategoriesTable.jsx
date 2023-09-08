@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import AddCategoryModal from '../adminComps/addCategoryModal/AddCategoryModal'
 
+import {DataGrid} from '@mui/x-data-grid';
 
 
 const CategoriesTable = () => {
@@ -63,62 +64,96 @@ const CategoriesTable = () => {
     },[isCatVisible])
 
 
+    
+    /* DATA GRID ROWS AND COLUMNS */
+
+
+    const columns =  [
+        {field: "id", headerName: "Id", width: 100},
+        {field: "name", headerName: "Name", width: 200},
+   
+        {
+            field: "edit",
+            headerName: "Edit",
+            width: 100,
+            sortable: false,
+            renderCell: (params) => (
+              <Button
+                
+                variant="outline-primary"
+              >
+               <i class="bi bi-pencil-square"></i>
+
+              </Button>
+            ),
+          },
+          {
+            field: "delete",
+            headerName: "Delete",
+            width: 100,
+            sortable: false,
+            renderCell: (params) => (
+              <Button
+                onClick={()=>handleDelete(params.row.catId)} 
+                variant="outline-danger"
+              >
+                <i class="bi bi-trash3"></i>
+              </Button>
+            ),
+          },
+
+
+
+    ];
+
+    const rows = categoryData?.map((row, index)=>({
+        id: index + 1,
+        name: row.name,
+
+        // Store the user ID in a closure
+        catId: row._id,
+
+
+    }))
+
+
 
 
   return (
     <>
-    <Container className='mt-5 d-flex flex-column align-items-center'>
-        <h1 className='mb-5'>Categories Data</h1>
+    
+    <Container className='mt-2 d-flex flex-column p-0'>
 
-        <Row className='align-items-center d-flex'>
-            <Col className='d-flex flex-column'>
-          
-                <Button className='align-self-end mb-3' onClick={()=>dispatch(setCatToggle())}>Create New Category</Button>
+<Row className='align-items-center d-flex'>
+    <Col className='d-flex flex-column'>
 
-                {isCatVisible && <AddCategoryModal/>}
+    <h1 className='mb-4 p-3 rounded-3 shadow-sm fs-4 text-body bg-white'>Categories Data</h1>
+        <Button className='align-self-end mb-3'>Create New Category</Button>
 
-                <Table bordered striped responsive="sm" className='text-center'>
-                <thead>
-                        <tr>
-                        <th>#</th>
-                            {categoryData.length > 0 &&
-                                Object.keys(categoryData[0]).map((key) => {
-                                // Exclude specific keys from being displayed as headers
-                                if (key !== '_id' && key !== '__v') {
-                                    return <th key={key}>{key}</th>;
-                                }
-                                return null; // Skip this key
-                                })}
-                        <th>Update</th>
-                        <th>Delete</th>
-                        </tr>
-                        
+       
+     
+        <div style={{height: 400, width: "100%"}} className='p-4 bg-white rounded-3 shadow-sm'>
+        
+        
+        
+        <DataGrid
+            className='datagrid-custom'
+            columns={columns}
+            rows={rows}
+            checkboxSelection
+            pagination
+            autoPageSize
+            
+            />
+        </div>
+    </Col>
+</Row>
 
-                        </thead>
-                    <tbody>
-                    
-                    {categoryData?.map((item, index)=>{
-                                return (
-                                    <tr  key={item._id}>
 
-                                        <td>{index+1}</td>
-                                        <td>{item.name}</td>
-                                        
-                                        <td><Button  className='bg-warning border-0'>Update</Button></td>
-                                        <td><Button onClick={()=>handleDelete(item._id)} className='bg-danger border-0'>Delete</Button></td>
-                                    </tr>
-                                )
-                            })}
-                    
-                    
-                    </tbody>
-                </Table>
 
-            </Col>
-        </Row>
+</Container>
 
-    </Container>
-</>
+    </>
   )
 }
 

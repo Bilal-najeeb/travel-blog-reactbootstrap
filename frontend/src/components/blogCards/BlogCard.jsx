@@ -19,10 +19,10 @@ const BlogCard = (props) => {
   return (
     <>
       
-                <Card>
+                <Card style={{maxHeight: 550}}>
                         <Card.Img variant="top" src={blogImg ? `${baseBlogImageUrl}${blogImg}` : 'https://thumbs.dreamstime.com/b/no-thumbnail-image-148010362.jpg'} style={{ width: '100%', height: '250px', objectFit: 'cover' }}/>
                         <Card.Body>
-                            <Card.Title>{title.slice(0,30)}..</Card.Title>
+                            <Card.Title>{title.slice(0,25)}..</Card.Title>
                             <Card.Text><b>Posted by </b><span className='text-primary'>{user}</span></Card.Text>
                             <Card.Text>
                                 {content.slice(0,30)}
@@ -36,7 +36,7 @@ const BlogCard = (props) => {
                                 </Link>
                               ) : ""}
                             {addDelete ? (
-                                <Button onClick={handleDelete} variant='danger m-1'>Delete Blog</Button>
+                                <Button onClick={handleDelete} variant='danger'>Delete Blog</Button>
                               ) : ""}
                         </Card.Body>
                     </Card>

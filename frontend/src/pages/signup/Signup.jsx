@@ -1,76 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { setCredentials } from '../../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import {useFormik} from 'formik';
+import { signUpSchema } from '../../validationSchemas/signUpSchema';
+import {motion} from 'framer-motion'
+
+
+
+const initialValues = {
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+}
 
 const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  
+  
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [errorMessages, setErrorMessages] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
 
-  const validationHandler = () => {
-    const errors = {};
+  const {values, errors, touched, handleChange, handleSubmit, handleBlur} = useFormik({
+    initialValues: initialValues,
+    validationSchema: signUpSchema,
+    onSubmit: async (values) => {
+      // Values object contains the form values
+    console.log('Form Values:', values);
 
-    if (!name.trim()) {
-      errors.name = 'Name is required';
+    try {
+      // Make an API request to send the form values
+      const res = await axios.post('http://localhost:3000/api/users/', {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      });
+
+      toast.success('Signed Up Successfully');
+      navigate('/login'); // Redirect the user after successful signup
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
     }
-
-    if (!email.trim()) {
-      errors.email = 'Email is required';
     }
+  })
 
-    if (!password.trim()) {
-      errors.password = 'Password is required';
-    } else if (password.length < 6) {
-      errors.password = 'Password should be at least 6 characters';
-    }
 
-    if (password !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrorMessages(errors);
-
-    // Check if there are any errors
-    return Object.values(errors).every((error) => error === '');
-  };
-
-  const SubmitHandler = async (e) => {
-    e.preventDefault();
-
-    const isValid = validationHandler();
-
-    if (isValid) {
-      try {
-        const res = await axios.post('http://localhost:3000/api/users/', {
-          name: name,
-          email: email,
-          password: password,
-        });
-
-        const data = await res.data;
-        toast.success('Signed Up Successfully');
-        navigate('/login');
-      } catch (error) {
-        toast.error(error?.response?.data?.message || error.message);
-      }
-    }
-  };
+ 
 
   useEffect(() => {
     if (userInfo) {
@@ -80,25 +61,38 @@ const Signup = () => {
 
   return (
     <>
-      <Container
-        fluid
-        className='d-flex justify-content-center  flex-column bg-primary'
-        style={{ height: '100vh' }}
-      >
-        <h1 className='text-white text-center mb-5'>Sign Up</h1>
 
-        <Row className='justify-content-center'>
-          <Col sm='12' md='6'>
-            <Form className='p-5 bg-white rounded-4' onSubmit={SubmitHandler}>
+      <Container fluid className='d-flex bg-dark align-items-center justify-content-center' style={{ height: '100vh' }}>
+
+      <motion.div animate={{x: 0}} initial={{x: -500}}>
+        <Row  className='g-0 justify-content-center'>
+
+        <Col lg={5} sm={5} xs={8} className='d-flex align-items-center rounded-start-2 xs-rounded-2  p-0'>
+            <Container className='h-100'>
+              <Row className='h-100'>
+                <Col className='p-0'>
+                  <Image className='w-100 h-100 object-fit-cover rounded-start-2' src='https://img.freepik.com/free-photo/hightech-helmets-humanoid-being-generative-ai_8829-2879.jpg?w=740&t=st=1694081901~exp=1694082501~hmac=ec3dbfca29b6a3e9d1e32c9f5f2af88f41fb0ce67f027d827a292a97411d8400' />
+                </Col>
+              </Row>
+            </Container>
+          </Col>
+
+
+          <Col lg={5} sm={5} xs={8} >
+            <Container className='bg-white p-5 rounded-end-2'>
+            <h1 className='text-black text-center mb-3'>Sign Up</h1>
+            <Form className='bg-transparent rounded-4' onSubmit={handleSubmit}>
               <Form.Group className='mb-3' controlId='formBasicName'>
                 <Form.Label>Name</Form.Label>
                 <Form.Control
                   type='text'
                   placeholder='Enter Name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name='name'
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
-                <span className='text-danger'>{errorMessages.name}</span>
+                {errors.name && touched.name ? <span className='text-danger'>{errors.name}</span> : null}
               </Form.Group>
 
               <Form.Group className='mb-3' controlId='formBasicEmail'>
@@ -106,10 +100,12 @@ const Signup = () => {
                 <Form.Control
                   type='email'
                   placeholder='Enter Email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name='email'
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
-                <span className='text-danger'>{errorMessages.email}</span>
+                {errors.email && touched.email ? <span className='text-danger'>{errors.email}</span> : null}
               </Form.Group>
 
               <Form.Group className='mb-3' controlId='formBasicPassword'>
@@ -118,10 +114,12 @@ const Signup = () => {
                   autoComplete='new-password'
                   type='password'
                   placeholder='Password'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name='password'
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
-                <span className='text-danger'>{errorMessages.password}</span>
+                {errors.password && touched.password ? <span className='text-danger'>{errors.password}</span> : null}
               </Form.Group>
 
               <Form.Group className='mb-3' controlId='formBasicConfirmPassword'>
@@ -130,26 +128,29 @@ const Signup = () => {
                   autoComplete='new-password'
                   type='password'
                   placeholder='Confirm Password'
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  name='confirmPassword'
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
-                <span className='text-danger'>
-                  {errorMessages.confirmPassword}
-                </span>
+             {errors.confirmPassword && touched.confirmPassword ? <span className='text-danger'>{errors.confirmPassword}</span> : null}
+
               </Form.Group>
 
-              <Button variant='primary' type='submit'>
+              <Button variant='primary' type='submit' className='w-100'>
                 Submit
               </Button>
 
-              <Form.Group className='mt-2'>
+              <Form.Group className='mt-3 text-center'>
                 <Form.Text className='text-muted'>
-                  Already a Member? <Link to='/login'>Log In</Link>
+                  Already a Member? <Link to='/login'>Sign In</Link>
                 </Form.Text>
               </Form.Group>
             </Form>
+            </Container>
           </Col>
         </Row>
+      </motion.div>
       </Container>
     </>
   );
