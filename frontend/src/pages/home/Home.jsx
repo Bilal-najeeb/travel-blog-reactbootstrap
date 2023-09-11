@@ -28,15 +28,22 @@ const Home = () => {
   const [pageSize, setPageSize] = useState(3);
   const [totalBlogs, setTotalBlogs] = useState(0);
 
+  const [location, setLocation] = useState([]);
+  const [locationQuery, setLocationQuery] = useState('');
+
+  const [subLocation, setSubLocation] = useState([]);
+  const [fetchSubLocation, setFetchSubLocation] = useState('');
+  const [selectedSubLocation, setSelectedSubLocation] = useState('');
+
  
 
   const blogsApi = async (e) => {
 
     try {
 
-      
+    console.log("working", locationQuery);
     e?.preventDefault();
-    const res = await axios.get(`http://localhost:3000/api/blogs/?search=${searchTitle}&page=${activePage}&limit=${pageSize}&category=${catFilter}`);
+    const res = await axios.get(`http://localhost:3000/api/blogs/?search=${searchTitle}&page=${activePage}&limit=${pageSize}&category=${catFilter}&location=${locationQuery}`);
     const data = await res.data;
     setTotalBlogs(data.total);
     setBlogPost(data.blogs);
@@ -61,6 +68,40 @@ const Home = () => {
     }
   }
 
+      /* GET location from API */
+  const locationApi = async () => {
+    try {
+      const res = await axios.get(
+        'http://localhost:3000/api/locations/readlocation'
+      );
+      const data = await res.data;
+      setLocation(data);
+    
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+
+   /* GET sub-locations from API */
+   const subLocationApi = async () => {
+
+
+    
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/locations/readsublocation?locationQuery=${fetchSubLocation}`
+      );
+      const data = await res.data;
+      setSubLocation(data);
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+
  
 
 
@@ -68,8 +109,10 @@ const Home = () => {
   useEffect(()=>{
     blogsApi();
     categoryApi();
+    locationApi();
+    subLocationApi();
 
-  },[activePage, pageSize, catFilter])
+  },[activePage, pageSize, catFilter, locationQuery])
 
 
 
@@ -77,11 +120,11 @@ const Home = () => {
 
     <>
 
-    <Container className='p-0' style={{marginTop: 100, height: '100%'}}>
-
-    <Row>
+    <Container fluid className='bg-light'>
+        <Container>
+    <Row style={{paddingTop: 100, paddingBottom: 100}}>
       <Col lg={3}>              
-          <div className='p-4 bg-light shadow-sm rounded-2 mb-5'>
+          <div className='p-4 bg-white shadow-sm rounded-2 mb-5'>
               <h1 className='mb-5'>Filters</h1>
                 <Container className=' px-0'>
                     <Form className="col-12 col-md- w-100" onSubmit={blogsApi}>
@@ -99,12 +142,36 @@ const Home = () => {
                               )})
                             }
                             
-                          </Form.Select>
-                  </Container> 
+                  </Form.Select>
+                  </Container>
+
+                  <Container className='px-0'>
+                  <Form.Select className="mb-3" aria-label="Default select example" onChange={(e)=>setLocationQuery(e.target.value)}>
+                            <option value="">Select a Location</option>
+                            {
+                              location.map((item)=>{return(
+                                <option key={item._id} value={item.name}>{item.name}</option>
+                              )})
+                            }
+                            
+                  </Form.Select>
+                  </Container>
+
+                  <Container className='px-0'>
+                  <Form.Select className="mb-3" aria-label="Default select example">
+                            <option value="">Select sub Location</option>
+                            {
+                              subLocation.map((item)=>{return(
+                                <option key={item._id} value={item._id}>{item.name}</option>
+                              )})
+                            }
+                            
+                  </Form.Select>
+                  </Container>  
           </div>
           </Col>
           <Col lg={9}>
-              <Container className='p-4 bg-light shadow-sm rounded-2'>
+              <Container className='p-4 shadow-sm rounded-2 bg-white'>
                       <h1 className='mb-5'>Blogs</h1>
                       <Row className='g-4'>
                           {
@@ -142,7 +209,7 @@ const Home = () => {
     
     </Row>
 
-
+    </Container>
 
     </Container>
 

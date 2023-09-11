@@ -11,6 +11,7 @@ import path from 'path';
 // @access  Public
 const registerUser = asyncHandler( async (req, res) => {
 
+
     const {name, email, password, role} = req.body;
 
     const userExists = await User.findOne({email: email});
@@ -54,9 +55,9 @@ const authUser = asyncHandler( async (req, res) => {
     
     const user = await User.findOne({email: email});
 
-    if(user?.isDeleted == true){
+    if(user?.isActive == false){
         res.status(400);
-        throw new Error("This account has been deleted");
+        throw new Error("This account is inactive");
     }
 
     if(user && ( await user.matchPassword(password) ) ){
@@ -68,7 +69,7 @@ const authUser = asyncHandler( async (req, res) => {
             email: user.email,
             role: user.role,
             image: user.profile_image,
-            isDeleted: user.isDeleted,
+            isActive: user.isActive,
             
         })
     } else {
@@ -147,6 +148,9 @@ const updatetUserProfile = asyncHandler( async (req, res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
+            role: updatedUser.role,
+            isActive: updatedUser.isActive,
+            image: updatedUser.profile_image,
         })
 
     } else {
@@ -176,7 +180,12 @@ const updatetUserProfileImage = asyncHandler( async (req, res) => {
         const updatedUser = await user.save();
         
         res.status(200).json({
-            profile_image: updatedUser.profile_image,
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            isActive: updatedUser.isActive,
+            image: updatedUser.profile_image,
          })
 
      } else {
@@ -227,21 +236,30 @@ const softDeleteAUser = asyncHandler( async (req, res) => {
     const user = await User.findById(id);
 
     if (!user){
-        res.status(400)
+        res.status(404)
         throw new Error("User not found");
     }
 
-    if(user.isDeleted == true){
-        res.status(400)
-        throw new Error("User already deleted");
+    if(user.isActive == true){
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            isActive: false,
+        });
+        res.status(200).json(updatedUser.isActive);
+    } else if (user.isActive == false) {
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            isActive: true,
+        });
+        res.status(200).json(updatedUser.isActive);
+    }
+    else {
+        res.status(500);
+        throw new Error("server error")
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, {
-        isDeleted: true,
-    });
+    
 
 
-       res.status(200).json(updatedUser._id);
+      
 }
 )
 

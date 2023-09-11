@@ -10,8 +10,22 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setCredentials: (state, action) => {
+
             state.userInfo = action.payload;
             localStorage.setItem('userInfo', JSON.stringify(action.payload));
+
+            // // Copy the existing userInfo object
+            // const updatedUserInfo = { ...state.userInfo };
+            
+            // // Update only the image property
+            // updatedUserInfo.image = action.payload.image;
+            
+            // // Update the state with the modified userInfo
+            // state.userInfo = updatedUserInfo;
+            
+            // // Update the corresponding data in localStorage
+            // localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+
         },
         removeCredentials: (state, action) => {
             state.userInfo = null;

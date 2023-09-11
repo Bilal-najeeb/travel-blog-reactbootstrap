@@ -31,6 +31,14 @@ const Sidebar = (props) => {
     dispatch(toggle("categoriesData"));
   }
 
+  const handleToggle5 = () => {
+    dispatch(toggle("locationsData"));
+  }
+
+  const handleToggle6 = () => {
+    dispatch(toggle("sublocationsData"));
+  }
+
   return (
     <>
       <Container fluid  className='bg-dark min-vh-100' style={{width: 200}}>
@@ -55,6 +63,20 @@ const Sidebar = (props) => {
                 <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
                   <i className="bi bi-bookmarks me-3 fs-5"></i>
                   <span className='fs-6'>Category</span>
+                </Link>
+            </li>
+
+            <li className='nav-item' onClick={handleToggle5}>
+                <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
+                  <i className="bi bi-geo-alt-fill me-3 fs-5"></i>
+                  <span className='fs-6'>Location</span>
+                </Link>
+            </li>
+
+            <li className='nav-item' onClick={handleToggle6}>
+                <Link to="" className='nav-link py-2 px-2 text-white align-items-center d-flex'>
+                  <i className="bi bi-geo-alt-fill me-3 fs-5"></i>
+                  <span className='fs-6'>Sub Location</span>
                 </Link>
             </li>
 

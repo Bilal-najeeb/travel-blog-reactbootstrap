@@ -10,6 +10,7 @@ import path from 'path';
 import userRoutes from './routes/userRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
+import locationRoutes from './routes/locationRoutes.js'
 
 
 connectDB();
@@ -38,6 +39,9 @@ app.use('/api/blogs/', blogRoutes)
 
 //Category Routes
 app.use('/api/categories/', categoryRoutes)
+
+//Location Routes
+app.use('/api/locations/', locationRoutes)
 
 //Server Check
 app.get('/', (req, res) => res.send('Server Ready'));

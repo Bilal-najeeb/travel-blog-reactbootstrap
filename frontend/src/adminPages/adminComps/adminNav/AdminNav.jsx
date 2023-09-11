@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, Container, Row, Button, Navbar, Nav, NavDropdown, Image} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap';
-
+import './adminNav.css'
 
 import { useSelector, useDispatch } from 'react-redux';
 import { removeCredentials } from '../../../slices/authSlice';
@@ -38,7 +38,7 @@ const AdminNav = () => {
         <Nav className='me-auto justify-content-end align-items-center' style={{ width: '100%' }}>
           {userInfo ? (
             <div className='d-flex'>
-              <NavDropdown title={userInfo.name} id='username'>
+              <NavDropdown title={userInfo.name} id='username-panel'>
               
                 {
                   userInfo.role === "admin" ? (<>

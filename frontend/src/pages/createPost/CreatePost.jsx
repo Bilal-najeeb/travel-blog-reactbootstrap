@@ -46,6 +46,12 @@ const CreatePost = () => {
   const [category, setCategory] = useState('');
   const [files, setFiles] = useState(null);
   const [getCategory, setGetCategory] = useState([]);
+
+  const [location, setLocation] = useState([]);
+  const [subLocation, setSubLocation] = useState([]);
+  const [fetchSubLocation, setFetchSubLocation] = useState('');
+  const [selectedSubLocation, setSelectedSubLocation] = useState('');
+
   const [errorMessages, setErrorMessages] = useState('');
   const navigate = useNavigate();
 
@@ -66,6 +72,10 @@ const CreatePost = () => {
 
     if (!category.trim()) {
       errors.category = 'Category is required';
+    }
+
+    if (!selectedSubLocation.trim()) {
+      errors.category = 'Sub Location is required';
     }
 
     if (!files) {
@@ -90,6 +100,7 @@ const CreatePost = () => {
         formData.append('summary', summary);
         formData.append('category', category);
         formData.append('blogImg', files);
+        formData.append('location', selectedSubLocation);
 
         const res = await axios.post(
           'http://localhost:3000/api/blogs/createblog',
@@ -130,9 +141,48 @@ const CreatePost = () => {
     }
   };
 
+  /* GET location from API */
+  const locationApi = async () => {
+    try {
+      const res = await axios.get(
+        'http://localhost:3000/api/locations/readlocation'
+      );
+      const data = await res.data;
+      setLocation(data);
+    
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
+
+
+   /* GET sub-locations from API */
+   const subLocationApi = async () => {
+
+
+    
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/locations/readsublocation?locationQuery=${fetchSubLocation}`
+      );
+      const data = await res.data;
+      setSubLocation(data);
+      console.log(data);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   useEffect(() => {
     categoryApi();
-  }, []);
+    locationApi();
+    if(fetchSubLocation){
+      subLocationApi();
+    }
+    
+  }, [fetchSubLocation]);
 
   return (
     <>
@@ -214,6 +264,40 @@ const CreatePost = () => {
                 })}
               </Form.Select>
               <span className='text-danger'>{errorMessages.category}</span>
+
+              <Form.Select
+                className='mb-3'
+                aria-label='Default select example'
+         
+                onChange={(e)=>setFetchSubLocation(e.target.value)}
+              >
+                <option value=''>Select a Location</option>
+
+                {location?.map((item) => {
+                  return (
+                    <option key={item._id} value={item._id}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+
+              <Form.Select
+                className='mb-3'
+                aria-label='Default select example'
+                onChange= {(e)=>setSelectedSubLocation(e.target.value)}
+              >
+                <option value=''>Select sub Location</option>
+
+                {subLocation?.map((item) => {
+                  return (
+                    <option key={item._id} value={item._id}>
+                      {item.name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+              
 
               <Button className='col-lg-12' variant='primary' type='submit'>
                 Create Post

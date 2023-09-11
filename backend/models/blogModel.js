@@ -10,6 +10,7 @@ const blogSchema = mongoose.Schema({
     content: {type: String, required: true},
     category: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     blogImg: {type: String, required: true},
+    location: {type: mongoose.Schema.Types.ObjectId, ref: 'SubLocation'},
 
 }, {
     timestamps: true,

@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Category from '../models/categoryModel.js';
-import Subcategory from '../models/subcategoryModel.js'
 
 
 

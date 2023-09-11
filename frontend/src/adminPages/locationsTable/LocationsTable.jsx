@@ -3,29 +3,29 @@ import { Col, Container, Row, Button, Card, Form, Table } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-import modalToggleSlice, { setCatToggle } from '../../slices/modalToggleSlice'
+import modalToggleSlice, { setCatToggle, setLocToggle } from '../../slices/modalToggleSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
-import AddCategoryModal from '../adminComps/addCategoryModal/AddCategoryModal'
 
 import {DataGrid} from '@mui/x-data-grid';
+import AddLocationModal from '../adminComps/addLocationModal/AddLocationModal'
 
 
-const CategoriesTable = () => {
+const LocationsTable = () => {
 
 
-    const [categoryData, setCategoryData] = useState([]);
+    const [locationData, setLocationData] = useState([]);
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const {isCatVisible} = useSelector((state)=>state.modalToggle);
+    const {isLocVisible} = useSelector((state)=>state.modalToggle);
 
-    const getCategoryData = async () => {
+    const getLocationData = async () => {
         try {
-            const res = await axios.get("http://localhost:3000/api/categories/readcategory");
+            const res = await axios.get("http://localhost:3000/api/locations/readlocation");
             const data = await res.data;
-            setCategoryData(data);
+            setLocationData(data);
             console.log(data);
         } catch (error) {
             toast.error(error?.data?.response?.message);
@@ -37,13 +37,13 @@ const CategoriesTable = () => {
     
     const handleDelete = async (id) => {
 
-        const canDelete = window.confirm('Are you sure you want to delete this Category?');
+        const canDelete = window.confirm('Are you sure you want to delete this Location?');
 
         if (canDelete) {
 
         console.log(id);
         try {
-            const res = await axios.delete(`http://localhost:3000/api/categories/deletecategory/${id}`);
+            const res = await axios.delete(`http://localhost:3000/api/locations/deletelocation/${id}`);
             toast.success("Deleted Successfully");
             console.log(res);
             
@@ -60,8 +60,8 @@ const CategoriesTable = () => {
 
 
     useEffect(()=>{
-        getCategoryData();
-    },[isCatVisible])
+        getLocationData();
+    },[isLocVisible])
 
 
     
@@ -82,7 +82,7 @@ const CategoriesTable = () => {
                 
                 variant="outline-primary"
               >
-               <i className="bi bi-pencil-square"></i>
+               <i class="bi bi-pencil-square"></i>
 
               </Button>
             ),
@@ -97,7 +97,7 @@ const CategoriesTable = () => {
                 onClick={()=>handleDelete(params.row.catId)} 
                 variant="outline-danger"
               >
-                <i className="bi bi-trash3"></i>
+                <i class="bi bi-trash3"></i>
               </Button>
             ),
           },
@@ -106,7 +106,7 @@ const CategoriesTable = () => {
 
     ];
 
-    const rows = categoryData?.map((row, index)=>({
+    const rows = locationData?.map((row, index)=>({
         id: index + 1,
         name: row.name,
 
@@ -127,9 +127,10 @@ const CategoriesTable = () => {
 <Row className='align-items-center d-flex'>
     <Col className='d-flex flex-column'>
 
-    <h1 className='mb-4 p-3 rounded-3 shadow-sm fs-4 text-body bg-white'>Categories Data</h1>
-        <Button className='align-self-end mb-3'>Create New Category</Button>
-
+    <h1 className='mb-4 p-3 rounded-3 shadow-sm fs-4 text-body bg-white'>Locations Data</h1>
+        <Button className='align-self-end mb-3' onClick={()=>dispatch(setLocToggle())}>Create New Location</Button>
+        
+        {isLocVisible && <AddLocationModal/>}
        
      
         <div style={{height: 400, width: "100%"}} className='p-4 bg-white rounded-3 shadow-sm'>
@@ -157,4 +158,4 @@ const CategoriesTable = () => {
   )
 }
 
-export default CategoriesTable
+export default LocationsTable

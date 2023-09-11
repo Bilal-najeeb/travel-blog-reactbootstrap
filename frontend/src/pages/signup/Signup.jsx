@@ -10,7 +10,7 @@ import {useFormik} from 'formik';
 import { signUpSchema } from '../../validationSchemas/signUpSchema';
 import {motion} from 'framer-motion'
 
-
+import './signup.css'
 
 const initialValues = {
   name: "",
@@ -82,7 +82,9 @@ const Signup = () => {
             <Container className='bg-white p-5 rounded-end-2'>
             <h1 className='text-black text-center mb-3'>Sign Up</h1>
             <Form className='bg-transparent rounded-4' onSubmit={handleSubmit}>
-              <Form.Group className='mb-3' controlId='formBasicName'>
+
+
+              <Form.Group className='mb-3 position-relative' controlId='formBasicName'>
                 <Form.Label>Name</Form.Label>
                 <Form.Control
                   type='text'
@@ -92,10 +94,10 @@ const Signup = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.name && touched.name ? <span className='text-danger'>{errors.name}</span> : null}
+                {errors.name && touched.name ? <span className='error-message-1 text-danger'>{errors.name}</span> : null}
               </Form.Group>
 
-              <Form.Group className='mb-3' controlId='formBasicEmail'>
+              <Form.Group className='mb-3 position-relative' controlId='formBasicEmail'>
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type='email'
@@ -105,10 +107,10 @@ const Signup = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.email && touched.email ? <span className='text-danger'>{errors.email}</span> : null}
+                {errors.email && touched.email ? <span className='error-message-1 text-danger'>{errors.email}</span> : null}
               </Form.Group>
 
-              <Form.Group className='mb-3' controlId='formBasicPassword'>
+              <Form.Group className='mb-3 position-relative' controlId='formBasicPassword'>
                 <Form.Label>Password</Form.Label>
                 <Form.Control
                   autoComplete='new-password'
@@ -119,10 +121,10 @@ const Signup = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.password && touched.password ? <span className='text-danger'>{errors.password}</span> : null}
+                {errors.password && touched.password ? <span className=' error-message-1 text-danger'>{errors.password}</span> : null}
               </Form.Group>
 
-              <Form.Group className='mb-3' controlId='formBasicConfirmPassword'>
+              <Form.Group className='mb-3 position-relative' controlId='formBasicConfirmPassword'>
                 <Form.Label>Confirm Password</Form.Label>
                 <Form.Control
                   autoComplete='new-password'
@@ -133,11 +135,11 @@ const Signup = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-             {errors.confirmPassword && touched.confirmPassword ? <span className='text-danger'>{errors.confirmPassword}</span> : null}
+             {errors.confirmPassword && touched.confirmPassword ? <span className='error-message-1 text-danger'>{errors.confirmPassword}</span> : null}
 
               </Form.Group>
 
-              <Button variant='primary' type='submit' className='w-100'>
+              <Button variant='primary' type='submit' className='w-100 mt-4'>
                 Submit
               </Button>
 

@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import Blog from '../models/blogModel.js';
 import User from '../models/userModel.js';
 import Category from '../models/categoryModel.js';
-
+import SubLocation from '../models/subLocationModel.js'
 
 
 
@@ -13,11 +13,11 @@ import Category from '../models/categoryModel.js';
 // @access  Private
 const createBlog = asyncHandler( async (req, res) => {
 
-    const {title, summary,content, category} = req.body;
+    const {title, summary,content, category, location} = req.body;
     const blog_image = req.file.filename;
 
     console.log(title, summary, content, blog_image, category);
-    if(!title || !summary || !content || !blog_image || !category) {
+    if(!title || !summary || !content || !blog_image || !category || !location) {
         
         res.status(400);
         throw new Error("Fill all fields to create a blog post")
@@ -26,10 +26,16 @@ const createBlog = asyncHandler( async (req, res) => {
     const author = req.user._id;
 
     const catId = await Category.findById(category);
+    const locationId = await SubLocation.findById(location);
 
     if(!catId){
         res.status(404);
         throw new Error("Invalid blog category");
+    }
+
+    if(!locationId){
+        res.status(404);
+        throw new Error("Invalid location");
     }
 
     if(!author){
@@ -44,6 +50,7 @@ const createBlog = asyncHandler( async (req, res) => {
         content,
         category: catId,
         blogImg: blog_image,
+        location: locationId,
     })
 
     res.status(201).json(blog);
@@ -62,6 +69,7 @@ const getBlog = asyncHandler( async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
     const category = req.query.category || "";
+    const locationId = req.query.location || "";
   
 
     // Calculate the skip value based on the page and limit
@@ -76,12 +84,28 @@ const getBlog = asyncHandler( async (req, res) => {
     if(category){
         baseQuery.category = category;
     }
+
+    if(locationId){
+        baseQuery.parentLocation = locationId;
+    }
+
     
+    
+    console.log("base query",baseQuery);
+
     // Find all blogs that match the search query, skip and limit the results
     const totalBlogs = await Blog.countDocuments(baseQuery);
     const blogs = await Blog.find(baseQuery)
         .populate('author', 'name')
         .populate('category', 'name')
+        .populate({
+            path: 'location', // Populate the location field
+            select: 'name',
+            populate: {
+              path: 'parentLocation', // Populate the parentLocation field within location
+              select: 'name',
+            },
+          })
         .skip(skip)
         .limit(limit);
 

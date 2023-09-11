@@ -42,7 +42,7 @@ const UserTable = () => {
             const res = await axios.get(`http://localhost:3000/api/users/profile/all`);
             const data = await res.data;
             setUserData(data);
-            setTotalUsers(data.total);
+            //setTotalUsers(data.total);
             console.log(data);
         } catch (error) {
             toast.error(error?.data?.response?.message);
@@ -50,16 +50,18 @@ const UserTable = () => {
 
     }
 
-    const handleDelete = async (id) => {
+    const handleIsActive = async (id) => {
 
-        const canDelete = window.confirm('Are you sure you want to delete this user?');
+        const canInActivate = window.confirm('Are you sure you want to Update user Status?');
 
-        if (canDelete) {
+        if (canInActivate) {
 
         console.log(id);
         try {
             const res = await axios.put(`http://localhost:3000/api/users/profile/soft-delete/${id}`);
-            toast.success("Soft Deleted Successfully");
+            const data = await res.data;
+         
+            toast.success("User Status Updated");
             console.log(res);
             
         } catch (error) {
@@ -87,7 +89,19 @@ const UserTable = () => {
         {field: "name", headerName: "Name", width: 200},
         {field: "role", headerName: "Role", width: 200},
         {field: "email", headerName: "Email", width: 200},
-        {field: "isDeleted", headerName: "isDeleted", width: 200},
+        {
+            field: "isActive",
+            headerName: "isActive",
+            width: 100,
+            renderCell: (params) => (
+              <Button
+                onClick={()=>handleIsActive(params.row.userId)}
+                variant={params.row.isActive == true ? 'outline-success' : 'outline-danger'}
+              >
+               {String(params.row.isActive)}
+              </Button>
+            ),
+          },
         {
             field: "edit",
             headerName: "Edit",
@@ -101,7 +115,7 @@ const UserTable = () => {
                 }}
                 variant="outline-primary"
               >
-               <i class="bi bi-pencil-square"></i>
+               <i className="bi bi-pencil-square"></i>
 
               </Button>
             ),
@@ -113,10 +127,10 @@ const UserTable = () => {
             sortable: false,
             renderCell: (params) => (
               <Button
-                onClick={()=>handleDelete(params.row.userId)} 
+                //onClick={()=>handleDelete(params.row.userId)} 
                 variant="outline-danger"
               >
-                <i class="bi bi-trash3"></i>
+                <i className="bi bi-trash3"></i>
               </Button>
             ),
           },
@@ -130,7 +144,7 @@ const UserTable = () => {
         name: row.name,
         role: row.role,
         email: row.email,
-        isDeleted: row.isDeleted,
+        isActive: row.isActive,
         // Store the user ID in a closure
         userId: row._id,
 

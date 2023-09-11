@@ -3,29 +3,30 @@ import { Col, Container, Row, Button, Card, Form, Table } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-import modalToggleSlice, { setCatToggle } from '../../slices/modalToggleSlice'
+import modalToggleSlice, { setSubLocToggle } from '../../slices/modalToggleSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
-import AddCategoryModal from '../adminComps/addCategoryModal/AddCategoryModal'
 
 import {DataGrid} from '@mui/x-data-grid';
+import AddLocationModal from '../adminComps/addLocationModal/AddLocationModal'
+import AddSubLocationModal from '../adminComps/addSubLocationModal/AddSubLocationModal'
 
 
-const CategoriesTable = () => {
+const SubLocationsTable = () => {
 
 
-    const [categoryData, setCategoryData] = useState([]);
+    const [subLocationData, setSubLocationData] = useState([]);
 
     const navigate = useNavigate();
 
     const dispatch = useDispatch();
-    const {isCatVisible} = useSelector((state)=>state.modalToggle);
+    const {isSubLocVisible} = useSelector((state)=>state.modalToggle);
 
-    const getCategoryData = async () => {
+    const getSubLocationData = async () => {
         try {
-            const res = await axios.get("http://localhost:3000/api/categories/readcategory");
+            const res = await axios.get("http://localhost:3000/api/locations/readsublocation");
             const data = await res.data;
-            setCategoryData(data);
+            setSubLocationData(data);
             console.log(data);
         } catch (error) {
             toast.error(error?.data?.response?.message);
@@ -37,13 +38,13 @@ const CategoriesTable = () => {
     
     const handleDelete = async (id) => {
 
-        const canDelete = window.confirm('Are you sure you want to delete this Category?');
+        const canDelete = window.confirm('Are you sure you want to delete this Location?');
 
         if (canDelete) {
 
         console.log(id);
         try {
-            const res = await axios.delete(`http://localhost:3000/api/categories/deletecategory/${id}`);
+            const res = await axios.delete(`http://localhost:3000/api/locations/deletesublocation/${id}`);
             toast.success("Deleted Successfully");
             console.log(res);
             
@@ -60,8 +61,8 @@ const CategoriesTable = () => {
 
 
     useEffect(()=>{
-        getCategoryData();
-    },[isCatVisible])
+        getSubLocationData();
+    },[isSubLocVisible])
 
 
     
@@ -71,6 +72,7 @@ const CategoriesTable = () => {
     const columns =  [
         {field: "id", headerName: "Id", width: 100},
         {field: "name", headerName: "Name", width: 200},
+        {field: "Parent", headerName: "parentName", width: 200},
    
         {
             field: "edit",
@@ -82,7 +84,7 @@ const CategoriesTable = () => {
                 
                 variant="outline-primary"
               >
-               <i className="bi bi-pencil-square"></i>
+               <i class="bi bi-pencil-square"></i>
 
               </Button>
             ),
@@ -97,7 +99,7 @@ const CategoriesTable = () => {
                 onClick={()=>handleDelete(params.row.catId)} 
                 variant="outline-danger"
               >
-                <i className="bi bi-trash3"></i>
+                <i class="bi bi-trash3"></i>
               </Button>
             ),
           },
@@ -106,9 +108,10 @@ const CategoriesTable = () => {
 
     ];
 
-    const rows = categoryData?.map((row, index)=>({
+    const rows = subLocationData?.map((row, index)=>({
         id: index + 1,
         name: row.name,
+        Parent: row.parentLocation.name,
 
         // Store the user ID in a closure
         catId: row._id,
@@ -127,9 +130,10 @@ const CategoriesTable = () => {
 <Row className='align-items-center d-flex'>
     <Col className='d-flex flex-column'>
 
-    <h1 className='mb-4 p-3 rounded-3 shadow-sm fs-4 text-body bg-white'>Categories Data</h1>
-        <Button className='align-self-end mb-3'>Create New Category</Button>
-
+    <h1 className='mb-4 p-3 rounded-3 shadow-sm fs-4 text-body bg-white'>Locations Data</h1>
+        <Button className='align-self-end mb-3' onClick={()=>dispatch(setSubLocToggle())}>Create New Sub Location</Button>
+        
+        {isSubLocVisible && <AddSubLocationModal/>}
        
      
         <div style={{height: 400, width: "100%"}} className='p-4 bg-white rounded-3 shadow-sm'>
@@ -157,4 +161,4 @@ const CategoriesTable = () => {
   )
 }
 
-export default CategoriesTable
+export default SubLocationsTable

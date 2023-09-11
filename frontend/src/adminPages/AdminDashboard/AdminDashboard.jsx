@@ -8,6 +8,8 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import UserTable from '../userTable/UserTable';
 import CategoriesTable from '../categoriesTable/CategoriesTable';
 import AdminNav from '../adminComps/adminNav/AdminNav';
+import LocationsTable from '../locationsTable/LocationsTable';
+import SubLocationsTable from '../subLocationsTable/SubLocationsTable';
 
 
 const AdminDashboard = () => {
@@ -31,6 +33,14 @@ const AdminDashboard = () => {
 
                 {isActive == "categoriesData" && <>
                   <CategoriesTable/>
+                </>}
+
+                {isActive == "locationsData" && <>
+                  <LocationsTable/>
+                </>}
+
+                {isActive == "sublocationsData" && <>
+                  <SubLocationsTable/>
                 </>}
             </div>
             
