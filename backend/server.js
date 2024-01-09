@@ -6,24 +6,29 @@ dotenv.config();
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDB from "./config/db.js";
-const port = 5000;
+const port = 3731;
 import path from "path";
 import userRoutes from "./routes/userRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import locationRoutes from "./routes/locationRoutes.js";
 
-connectDB();
+//connectDB();
 
 const app = express();
 app.use(cors());
 
-app.use(express.json());
-
 app.use((req, res, next) => {
-  res.setHeader("X-Frame-Options", "https://superset.acruxtek.net/"); // or 'SAMEORIGIN' or 'ALLOW-FROM https://example.com'
+  console.log(req);
   next();
 });
+
+app.use(express.json());
+
+// app.use((req, res, next) => {
+//   res.setHeader("X-Frame-Options", "https://superset.acruxtek.net/"); // or 'SAMEORIGIN' or 'ALLOW-FROM https://example.com'
+//   next();
+// });
 
 //To access req.body and parse data
 app.use(express.urlencoded({ extended: true }));

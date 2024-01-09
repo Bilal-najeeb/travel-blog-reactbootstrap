@@ -400,9 +400,10 @@ const getGuestToken = asyncHandler(async (req, res) => {
       // Use res.cookie to set the cookie in the response
       res.cookie("XSRF-TOKEN", resp?.ckie, {
         secure: true,
+        SameSite: "none",
       });
       //Sres.cookie("session", resp?.ckie);
-      res.setHeader("X-CSRF-TOKEN", resp?.ckie);
+      res.setHeader("X-CSRF-TOKEN", resp?.csrfToken);
     }
 
     console.log("guest token responseeee", resp);

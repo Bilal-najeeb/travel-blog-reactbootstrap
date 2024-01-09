@@ -3,11 +3,13 @@ import React from "react";
 import { embedDashboard } from "@superset-ui/embedded-sdk";
 import axios from "axios";
 
+const base_url = import.meta.env.VITE_BASE_URL;
+
 function Home() {
   const [csrf, setCsrf] = React.useState();
   const getToken = async () => {
     const response = await axios.get(
-      "http://localhost:5000/api/users/guest-token"
+      `http://localhost:3731/api/users/guest-token`
     );
     const tokens = await response.data;
     setCsrf(tokens.csrfToken);
